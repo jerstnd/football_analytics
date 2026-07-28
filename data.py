@@ -46,4 +46,4 @@ def prepare_match_data(input_csv, output_dir="data"):
 
 if __name__ == "__main__":
     # Reference the raw file verbatim
-    prepare_match_data("season-2526.csv")
+    prepare_match_data("data/season-2526.csv")

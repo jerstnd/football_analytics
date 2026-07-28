@@ -1,20 +1,27 @@
 import os 
 import json
+import csv
 import math
 import random
 import statistics
 
-# --- DUMMY ---
-# We are using a 4-team mini-league with 12 matches for demonstration.
-TEAMS = {0: "Milan", 1: "Juventus", 2: "Roma", 3: "Inter"}
+'''
+Data fetching
+'''
+with open('data/team_mapping.json', 'r') as f:
+    TEAMS = {int(k): v for k, v in json.load(f).items()}
+
 NUM_TEAMS = len(TEAMS)
 
-# Format: (home_id, away_id, home_goals, away_goals)
-PREVIOUS_SEASON_MATCHES = [
-    (0, 1, 2, 1), (0, 2, 3, 0), (0, 3, 1, 1), 
-    (1, 0, 1, 1), (1, 2, 2, 0), (1, 3, 1, 0), 
-    (2, 0, 0, 2), (2, 1, 1, 1), (2, 3, 2, 2), 
-    (3, 0, 0, 1), (3, 1, 1, 2), (3, 2, 3, 1)]  
+PREVIOUS_SEASON_MATCHES = []
+with open('data/matches_ready.csv', 'r') as f:
+    reader = csv.reader(f)
+    next(reader) # skip header row
+
+    for row in reader:
+        match_tuple = (int(row[0]), int(row[1]), int(row[2]), int(row[3]))
+        PREVIOUS_SEASON_MATCHES.append(match_tuple)  
+
 
 def get_prior(rating):
     return -0.5 * (rating ** 2) / 10000.0
