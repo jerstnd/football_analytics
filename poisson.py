@@ -73,7 +73,7 @@ def get_params(state, h_id, a_id):
 
     return h_name, a_name, lambda_h, lambda_a
 
-def predict_single(state, h_id, a_id, rho=-0.10):
+def predict_single(state, h_id, a_id, rho=-0.1285): # -0.1285 is a general rho number for premier league
     '''
     Predicts and prints a single match layout
     '''
@@ -103,7 +103,7 @@ def predict_single(state, h_id, a_id, rho=-0.10):
     print(f"Draw:     {final_odds['Draw'] * 100:.2f}%")
     print(f"Away Win: {final_odds['Away_Win'] * 100:.2f}%")
 
-def predict_batch(state, fixtures_csv, rho=-0.10):
+def predict_batch(state, fixtures_csv, rho=-0.1285): # -0.1285 is a general rho number for premier league
     '''
     Predicts a full weekend CSV and saves a summary DataFrame
     '''
