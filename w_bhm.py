@@ -110,12 +110,12 @@ if __name__ == '__main__':
             "def_var": statistics.variance(traces["def"][t][burn_in:]) + time_decay
         }
 
-    # Automatically generate the new filename (e.g., ratings_wk1_updated.json)
-    updated_filename = json_file.replace(".json", "_updated.json")
-    new_filename = os.path.join('state', updated_filename)
+    # --- MODIFIED: Use os.path.basename to strip away any existing 'state/' folder prefix ---
+    base_name = os.path.basename(json_file).replace(".json", "_updated.json")
+    new_filename = os.path.join('state', base_name)
+    
     with open(new_filename, 'w') as f:
         json.dump(new_state, f, indent=4)
         
     print(f"Update complete! Hand-off state saved to: {new_filename}")
-
 

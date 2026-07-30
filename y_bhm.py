@@ -14,7 +14,7 @@ with open('data/team_mapping.json', 'r') as f:
 NUM_TEAMS = len(TEAMS)
 
 PREVIOUS_SEASON_MATCHES = []
-with open('data/matches_ready.csv', 'r') as f:
+with open('data/pl2325.csv', 'r') as f:
     reader = csv.reader(f)
     next(reader) # skip header row
 
@@ -148,6 +148,6 @@ if __name__ == '__main__':
             'def_var' : statistics.variance(traces['def'][t][burn_in:])
         }
 
-    output_filename = os.path.join('state', 'ratings_preseason.json')
+    output_filename = os.path.join('state', 'ratings_backtest.json')
     with open(output_filename, 'w') as f:
         json.dump(state_artifact, f, indent=4)
