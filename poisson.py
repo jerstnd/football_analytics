@@ -103,7 +103,6 @@ def predict_single(state, h_id, a_id, rho=-0.10):
     print(f"Draw:     {final_odds['Draw'] * 100:.2f}%")
     print(f"Away Win: {final_odds['Away_Win'] * 100:.2f}%")
 
-# --- NEW: Added the batch matchday processor function ---
 def predict_batch(state, fixtures_csv, rho=-0.10):
     '''
     Predicts a full weekend CSV and saves a summary DataFrame
@@ -112,7 +111,7 @@ def predict_batch(state, fixtures_csv, rho=-0.10):
         print(f"[Error] Could not find {fixtures_csv}")
         sys.exit(1)
         
-    # Dynamically build team mapping (Name -> ID) straight from your JSON state
+    # Dynamically build team mapping (Name -> ID) straight from JSON state
     name_to_id = {info['name']: str(t_id) for t_id, info in state['teams'].items()}
     
     fixtures = pd.read_csv(fixtures_csv)
@@ -152,8 +151,11 @@ def predict_batch(state, fixtures_csv, rho=-0.10):
     print("="*85)
     print(df_results.to_string(index=False))
     print("="*85 + "\n")
-    
-    output_filepath = fixtures_csv.replace('.csv', '_predictions.csv')
+
+    base_filename = os.path.basename(fixtures_csv)
+    output_filename = base_filename.replace('.csv', '_predictions.csv')
+    output_filepath = os.path.join('prediction', output_filename)
+
     df_results.to_csv(output_filepath, index=False)
     print(f"Saved Matchday Summary to: {output_filepath}")
     
