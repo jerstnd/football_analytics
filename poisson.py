@@ -53,7 +53,6 @@ def get_params(state, h_id, a_id):
     '''
     Pulls MCMC params from JSON and calculate to Expected Goals (lambda)
     '''
-
     try:
         h_adv = state['home_adv']['mean']
 
@@ -68,8 +67,11 @@ def get_params(state, h_id, a_id):
         print(f"Error: Could not find team ID {e} in the JSON file.")
         sys.exit(1)
 
-    lambda_h = math.exp(h_adv + h_att + h_def)
-    lambda_a = math.exp(a_att + a_def)
+    # FIXED: Home Attack vs Away Defense
+    lambda_h = math.exp(h_adv + h_att + a_def)
+    
+    # FIXED: Away Attack vs Home Defense
+    lambda_a = math.exp(a_att + h_def)
 
     return h_name, a_name, lambda_h, lambda_a
 
