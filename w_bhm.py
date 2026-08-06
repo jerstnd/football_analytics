@@ -18,7 +18,14 @@ def get_likelihood(matches, h_adv, att, defn):
     return ll
 
 def get_theta(h_id, a_id, h_adv, att, defn):
-    return math.exp(h_adv + att[h_id] + defn[a_id]), math.exp(att[a_id] + defn[h_id])
+    # FIX : Anchor the model to the Premier League average of ~1.4 goals per team
+    # math.log(1.4) = 0.3364
+    INTERCEPT = 0.3364
+    
+    t_h = math.exp(INTERCEPT + h_adv + att[h_id] + defn[a_id])
+    t_a = math.exp(INTERCEPT + att[a_id] + defn[h_id])
+
+    return t_h, t_a
 
 def run_mcmc(matches, prior_state, iterations=10000, step_size=0.1):
     num_teams = len(prior_state['teams'])

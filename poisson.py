@@ -67,11 +67,10 @@ def get_params(state, h_id, a_id):
         print(f"Error: Could not find team ID {e} in the JSON file.")
         sys.exit(1)
 
-    # FIXED: Home Attack vs Away Defense
-    lambda_h = math.exp(h_adv + h_att + a_def)
-    
-    # FIXED: Away Attack vs Home Defense
-    lambda_a = math.exp(a_att + h_def)
+    INTERCEPT = 0.3364
+
+    lambda_h = math.exp(INTERCEPT + h_adv + h_att + a_def)
+    lambda_a = math.exp(INTERCEPT + a_att + h_def)
 
     return h_name, a_name, lambda_h, lambda_a
 
