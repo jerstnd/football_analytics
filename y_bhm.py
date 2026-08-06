@@ -42,9 +42,7 @@ def get_likelihood(matches, h_adv, att, defn):
     return ll
 
 def get_theta(h_id, a_id, h_adv, att, defn):
-    # FIX : Anchor the model to the Premier League average of ~1.4 goals per team
-    # math.log(1.4) = 0.3364
-    INTERCEPT = 0.3364
+    INTERCEPT = 0.2231
     
     t_h = math.exp(INTERCEPT + h_adv + att[h_id] + defn[a_id])
     t_a = math.exp(INTERCEPT + att[a_id] + defn[h_id])

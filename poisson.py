@@ -67,7 +67,7 @@ def get_params(state, h_id, a_id):
         print(f"Error: Could not find team ID {e} in the JSON file.")
         sys.exit(1)
 
-    INTERCEPT = 0.3364
+    INTERCEPT = 0.2231
 
     lambda_h = math.exp(INTERCEPT + h_adv + h_att + a_def)
     lambda_a = math.exp(INTERCEPT + a_att + h_def)

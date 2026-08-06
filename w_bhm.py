@@ -18,9 +18,7 @@ def get_likelihood(matches, h_adv, att, defn):
     return ll
 
 def get_theta(h_id, a_id, h_adv, att, defn):
-    # FIX : Anchor the model to the Premier League average of ~1.4 goals per team
-    # math.log(1.4) = 0.3364
-    INTERCEPT = 0.3364
+    INTERCEPT = 0.2231
     
     t_h = math.exp(INTERCEPT + h_adv + att[h_id] + defn[a_id])
     t_a = math.exp(INTERCEPT + att[a_id] + defn[h_id])
@@ -101,20 +99,20 @@ if __name__ == '__main__':
 
     # 5. Calculate New State & Apply Evolutionary Noise
     burn_in = int(len(traces["home"]) * 0.2)
-    time_decay = 0.02 # Injects uncertainty to adapt to sudden form changes
+    time_decay = 0.005 # Injects uncertainty to adapt to sudden form changes
     num_teams = len(prior_state["teams"])
-    
+
     new_state = {"home_adv": {}, "teams": {}}
     new_state["home_adv"]["mean"] = statistics.median(traces["home"][burn_in:])
-    new_state["home_adv"]["var"] = statistics.variance(traces["home"][burn_in:]) + time_decay
+    new_state["home_adv"]["var"] = min(statistics.variance(traces["home"][burn_in:]) + time_decay, 0.05)
     
     for t in range(num_teams):
         new_state["teams"][str(t)] = {
             "name": prior_state["teams"][str(t)]["name"],
             "att_mean": statistics.median(traces["att"][t][burn_in:]),
-            "att_var": statistics.variance(traces["att"][t][burn_in:]) + time_decay,
+            "att_var": min(statistics.variance(traces["att"][t][burn_in:]) + time_decay, 0.05),
             "def_mean": statistics.median(traces["def"][t][burn_in:]),
-            "def_var": statistics.variance(traces["def"][t][burn_in:]) + time_decay
+            "def_var": min(statistics.variance(traces["def"][t][burn_in:]) + time_decay, 0.05)
         }
 
     # --- MODIFIED: Use os.path.basename to strip away any existing 'state/' folder prefix ---
