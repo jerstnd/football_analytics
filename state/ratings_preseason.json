@@ -143,6 +143,21 @@
             "att_var": 0.02138352987980912,
             "def_mean": 0.2752889134564226,
             "def_var": 0.01546164268334455
+        },
+        "20": {
+            "name": "Coventry",
+            "att_mean": 0.0,
+            "def_mean": 0.0
+        },
+        "21": {
+            "name": "Hull",
+            "att_mean": 0.0,
+            "def_mean": 0.0
+        },
+        "22": {
+            "name": "Ipswich",
+            "att_mean": 0.0,
+            "def_mean": 0.0
         }
     }
 }

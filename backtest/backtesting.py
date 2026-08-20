@@ -44,11 +44,15 @@ def compute_match_metrics(prob_dict, true_outcome, eps=1e-15):
     
     log_loss = -np.sum(y_vec * np.log(p_vec))
     brier_score = np.sum((p_vec - y_vec) ** 2)
+
+    cum_p = np.cumsum(p_vec)
+    cum_y = np.cumsum(y_vec)
+    rps = 0.5 * np.sum((cum_p[:-1] - cum_y[:-1]) ** 2)
     
     pred_outcome = ['H', 'D', 'A'][np.argmax(p_vec)]
     is_correct = int(pred_outcome == true_outcome)
     
-    return log_loss, brier_score, is_correct, pred_outcome
+    return log_loss, brier_score, rps, is_correct, pred_outcome
 
 def run_weekly_update_script(w_bhm_path, weekly_csv, prior_state, post_state):
     """
@@ -132,6 +136,7 @@ def run_chronological_backtest(matches_csv, initial_state, w_bhm_path="w_bhm.py"
         
         gw_log_losses = []
         gw_brier_scores = []
+        gw_rps_scores = []
         gw_correct = 0
         gw_count = 0
         
@@ -164,10 +169,11 @@ def run_chronological_backtest(matches_csv, initial_state, w_bhm_path="w_bhm.py"
 
             # Evaluate against true outcome
             true_outcome = get_true_outcome(home_goals, away_goals)
-            log_loss, brier_score, is_correct, pred_outcome = compute_match_metrics(odds, true_outcome)
+            log_loss, brier_score, match_rps, is_correct, pred_outcome = compute_match_metrics(odds, true_outcome)
 
             gw_log_losses.append(log_loss)
             gw_brier_scores.append(brier_score)
+            gw_rps_scores.append(match_rps)
             gw_correct += is_correct
             gw_count += 1
 
@@ -182,7 +188,8 @@ def run_chronological_backtest(matches_csv, initial_state, w_bhm_path="w_bhm.py"
                 "Draw %": f"{odds['Draw']*100:.1f}%",
                 "Away Win %": f"{odds['Away_Win']*100:.1f}%",
                 "Log Loss": round(log_loss, 4),
-                "Brier Score": round(brier_score, 4)
+                "Brier Score": round(brier_score, 4),
+                "RPS": round(match_rps, 4),
             })
 
         if gw_count == 0:
@@ -222,6 +229,7 @@ def run_chronological_backtest(matches_csv, initial_state, w_bhm_path="w_bhm.py"
 
     overall_ll = df_all['Log Loss'].mean()
     overall_bs = df_all['Brier Score'].mean()
+    overall_rps = df_all['RPS'].mean()
     overall_acc = (df_all['True Result'] == df_all['Pred Result']).mean() * 100.0
 
     print("="*80)
@@ -232,6 +240,7 @@ def run_chronological_backtest(matches_csv, initial_state, w_bhm_path="w_bhm.py"
     print("-" * 80)
     print(f"Overall Mean Log Loss   : {overall_ll:.4f}")
     print(f"Overall Mean Brier Score: {overall_bs:.4f}")
+    print(f"Overall Mean RPS        : {overall_rps:.4f}")
     print("="*80)
     print(f"Detailed match-by-match results saved to: {output_filepath}\n")
 
