@@ -1,7 +1,7 @@
 # Sequential Bayesian Football Prediction
 
 ## Overview
-An automated quantitative trading pipeline designed to extract mathematical edge from football match.  
+An automated prediction pipeline designed to extract mathematical edge from football match.  
 
 The architecture utilizes a Markov Chain Monte Carlo (MCMC) sampler to continuously evaluate hidden team parameters, passing Expected Goals (xG) through a Dixon-Coles adjusted Poisson distribution to accurately price complex market inefficiencies.
 
