@@ -18,7 +18,7 @@ Before the season begins, calculate the baseline MCMC parameter states by proces
 
     python y_bhm.py --history data/historical_results.csv --output state/ratings_preseason.json
 
-### Step 2-4: Weekly Matchday Loop
+### Step 2-3: Weekly Matchday Loop
 During the season, execute these commands chronologically to generate probabilities, allocate capital, and update the model's memory.
 
     # Step 2: Generate Matchday Probabilities (Pre-match)
@@ -31,8 +31,8 @@ During the season, execute these commands chronologically to generate probabilit
 ## Performance Validation
 The predictive edge of this engine was rigorously validated through a strict 38-week (380 match) chronological walk-forward backtest, ensuring zero future data leakage. The model is graded purely on probabilistic scoring rules rather than raw accuracy.
 
-* **Over/Under 2.5 Market:** 53.61% Top-Pick Accuracy | 0.7205 Mean Log Loss
-* **1X2 Market (Match Winner):** 1.0252 Mean Log Loss | 0.2089 Ranked Probability Score (RPS)
+* **Over/Under 2.5 Goals:** 53.61% Top-Pick Accuracy | 0.7205 Mean Log Loss
+* **1X2 Match Result:** 1.0252 Mean Log Loss | 0.2089 Ranked Probability Score (RPS)
 
 ## Data Structure Requirements
 To ensure seamless execution, the batch predictor requires input CSV files (e.g., fixtures_wk1.csv) to contain the following exact headers:
