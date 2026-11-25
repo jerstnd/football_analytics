@@ -60,7 +60,7 @@ def run_backtest(conn, season, train, rho, seed, note=None):
 
     matches = conn.execute('''
         SELECT m.id, m.round, m.date, m.home_id, m.away_id, h.name AS home, a.name AS away,
-               m.home_goals, m.away_goals
+               m.home_goals, m.away_goals, m.home_sot, m.away_sot
         FROM matches m JOIN teams h ON h.id = m.home_id JOIN teams a ON a.id = m.away_id
         WHERE m.season = ? AND m.home_goals IS NOT NULL''', (season,)).fetchall()
     if not matches or any(m['round'] is None or m['date'] is None for m in matches):
@@ -87,7 +87,8 @@ def run_backtest(conn, season, train, rho, seed, note=None):
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
                 [(run_id, p['match_id'], step, p['xg_h'], p['xg_a'], p['prob_h'], p['prob_d'], p['prob_a'],
                   p['prob_over_25'], p['prob_under_25']) for p in preds])
-        results = [(m['home_id'], m['away_id'], m['home_goals'], m['away_goals']) for m in fixtures]
+        results = [(m['home_id'], m['away_id'], db.blend(m['home_goals'], m['home_sot']),
+                    db.blend(m['away_goals'], m['away_sot'])) for m in fixtures]
         state = update_state(state, results)
         print(f"  step {step:>2}: {len(fixtures):>2} matches predicted, ratings updated", flush=True)
 
@@ -253,6 +254,8 @@ if __name__ == '__main__':
                         help="Season(s) to fit the preseason prior on (default: the season before each test season)")
     parser.add_argument('--rho', type=float, default=RHO, help=f"Dixon-Coles rho (default {RHO})")
     parser.add_argument('--seed', type=int, default=42, help="Random seed, so a run can be repeated (default 42)")
+    parser.add_argument('--shot-weight', type=float, default=db.SHOT_WEIGHT,
+                        help=f"Blend shots on target into the rating evidence, 0-1 (default {db.SHOT_WEIGHT}; 0 = goals only)")
     parser.add_argument('--note', help="Free-text note saved with the run")
     parser.add_argument('--min-edge', type=float, default=0.0, help="Bet only above this expected value (default 0 = any edge)")
     parser.add_argument('--kelly', type=float, default=0.25, help="Kelly fraction for the bankroll simulation (default 0.25)")
@@ -260,6 +263,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     conn = db.connect()
+    db.SHOT_WEIGHT = args.shot_weight
+    if args.season:
+        args.note = f"{args.note + '; ' if args.note else ''}shot_weight={args.shot_weight}"
     if args.list:
         for r in conn.execute('''SELECT r.*, COUNT(p.match_id) AS n FROM backtest_runs r
                                  LEFT JOIN backtest_predictions p ON p.run_id = r.id GROUP BY r.id ORDER BY r.id'''):

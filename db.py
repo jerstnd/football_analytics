@@ -41,6 +41,8 @@ CREATE TABLE IF NOT EXISTS matches (
     away_goals    INTEGER,
     odds_over_25  REAL,
     odds_under_25 REAL,
+    home_sot      INTEGER,   -- shots on target, NULL when unknown
+    away_sot      INTEGER,
     UNIQUE (season, home_id, away_id)
 );
 CREATE INDEX IF NOT EXISTS idx_matches_round ON matches (season, round);
@@ -141,6 +143,10 @@ def connect(path=None):
     conn.row_factory = sqlite3.Row
     conn.execute('PRAGMA foreign_keys = ON')
     conn.executescript(SCHEMA)
+    cols = {r['name'] for r in conn.execute('PRAGMA table_info(matches)')}
+    for col in ('home_sot', 'away_sot'):
+        if col not in cols:  # databases created before shots were stored
+            conn.execute(f'ALTER TABLE matches ADD COLUMN {col} INTEGER')
     return conn
 
 
@@ -166,15 +172,28 @@ def add_team(conn, name):
 
 # ---------- matches ----------
 
+# Rating evidence = (1 - SHOT_WEIGHT) * goals + SHOT_WEIGHT * GOALS_PER_SOT * shots on target.
+# 0 = real goals only. 0.75 was best in backtest runs 3-12. GOALS_PER_SOT measured over 2023/24-2025/26.
+SHOT_WEIGHT = 0.75
+GOALS_PER_SOT = 0.328
+
+
+def blend(goals, sot):
+    if not SHOT_WEIGHT or sot is None:
+        return goals
+    return (1 - SHOT_WEIGHT) * goals + SHOT_WEIGHT * GOALS_PER_SOT * sot
+
+
 def get_results(conn, season, round=None):
-    '''Played matches as (home_id, away_id, home_goals, away_goals) tuples.'''
-    sql = ('SELECT home_id, away_id, home_goals, away_goals FROM matches '
+    '''Played matches as (home_id, away_id, home_goals, away_goals) tuples; goals are blended with shots (see blend).'''
+    sql = ('SELECT home_id, away_id, home_goals, away_goals, home_sot, away_sot FROM matches '
            'WHERE season = ? AND home_goals IS NOT NULL')
     params = [season]
     if round is not None:
         sql += ' AND round = ?'
         params.append(round)
-    return [tuple(r) for r in conn.execute(sql + ' ORDER BY date, id', params)]
+    return [(h, a, blend(hg, hs), blend(ag, as_))
+            for h, a, hg, ag, hs, as_ in conn.execute(sql + ' ORDER BY date, id', params)]
 
 
 def get_fixtures(conn, season, round):

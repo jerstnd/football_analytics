@@ -5,6 +5,7 @@ Load match data into football.db.
   python fetch.py --season 2627 --odds my_odds.csv    # O/U 2.5 odds: HomeTeam,AwayTeam,Odds_Over_25,Odds_Under_25
   python fetch.py --season 2526 --history season-2526.csv   # a football-data.co.uk season CSV (no rounds)
   python fetch.py --season 2526 --market-odds Matches.csv    # Bet365 + best-price odds (Club-Football-Match-Data)
+  python fetch.py --season 2627 --shots               # shots on target for played matches, from ESPN
 
 Every mode is an upsert keyed on (season, home team, away team), so re-running is safe.
 '''
@@ -17,6 +18,9 @@ import urllib.request
 import db
 
 FEED_URL = 'https://fixturedownload.com/feed/json/epl-{year}'
+# shortcut: unofficial, keyless ESPN endpoint; matches football-data.co.uk HST/AST on 751/760 2025/26 counts.
+# If it breaks, fall back to a hand-typed CSV.
+ESPN_URL = 'https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates={date}'
 
 
 def team_id_or_add(conn, name, allow_new):
@@ -160,7 +164,40 @@ def import_history(conn, season, path):
             a = team_id_or_add(conn, row['AwayTeam'], True)
             counts[upsert_match(conn, season, h, a, date=date,
                                 home_goals=int(row['FTHG']), away_goals=int(row['FTAG']))] += 1
+            if row.get('HST'):
+                conn.execute('UPDATE matches SET home_sot = ?, away_sot = ? WHERE season = ? AND home_id = ? AND away_id = ?',
+                             (int(row['HST']), int(row['AST']), season, h, a))
     print(f"{path}: {counts}")
+
+
+def import_shots(conn, season):
+    '''Shots on target from ESPN for played matches that don't have them yet, one request per match date.'''
+    dates = [r[0] for r in conn.execute('SELECT DISTINCT date FROM matches WHERE season = ? AND home_goals IS NOT NULL '
+                                        'AND home_sot IS NULL ORDER BY date', (season,))]
+    n = 0
+    with conn:
+        for date in dates:
+            req = urllib.request.Request(ESPN_URL.format(date=date.replace('-', '')),
+                                         headers={'User-Agent': 'football-analytics/1.0'})
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                events = json.load(resp)['events']
+            for e in events:
+                c = e['competitions'][0]
+                if c['status']['type']['name'] != 'STATUS_FULL_TIME':
+                    continue
+                side = {t['homeAway']: t for t in c['competitors']}
+                ids = [db.resolve_team(conn, side[k]['team']['displayName']) for k in ('home', 'away')]
+                sot = [next((s['displayValue'] for s in side[k].get('statistics', []) if s['name'] == 'shotsOnTarget'), None)
+                       for k in ('home', 'away')]
+                if None in ids or None in sot:
+                    print(f"  [!] Skipped {side['home']['team']['displayName']} vs {side['away']['team']['displayName']} "
+                          f"on {date}: unknown team name or no shots data")
+                    continue
+                n += conn.execute('UPDATE matches SET home_sot = ?, away_sot = ? WHERE season = ? AND home_id = ? '
+                                  'AND away_id = ? AND home_goals IS NOT NULL', (int(sot[0]), int(sot[1]), season, *ids)).rowcount
+    missing = conn.execute('SELECT COUNT(*) FROM matches WHERE season = ? AND home_goals IS NOT NULL AND home_sot IS NULL',
+                           (season,)).fetchone()[0]
+    print(f"Shots added for {n} matches; {missing} played match(es) still without shots.")
 
 
 if __name__ == '__main__':
@@ -169,6 +206,7 @@ if __name__ == '__main__':
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--odds', help="CSV of O/U 2.5 odds to attach to this season's matches")
     group.add_argument('--history', help="football-data.co.uk season CSV to import")
+    group.add_argument('--shots', action='store_true', help="Shots on target for played matches, from ESPN")
     group.add_argument('--market-odds', help="Club-Football-Match-Data Matches.csv: Bet365 and best-price odds")
     args = parser.parse_args()
 
@@ -177,6 +215,8 @@ if __name__ == '__main__':
         import_odds(conn, args.season, args.odds)
     elif args.market_odds:
         import_market_odds(conn, args.season, args.market_odds)
+    elif args.shots:
+        import_shots(conn, args.season)
     elif args.history:
         import_history(conn, args.season, args.history)
     else:
