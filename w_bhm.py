@@ -1,10 +1,10 @@
-import json
 import math
 import random
 import statistics
 import sys
-import os
-import csv
+import argparse
+
+import db
 
 def get_prior(rating, prior_mean, prior_variance):
     return -((rating - prior_mean) ** 2) / (2 * prior_variance)
@@ -26,87 +26,104 @@ def get_theta(h_id, a_id, h_adv, att, defn):
     return t_h, t_a
 
 def run_mcmc(matches, prior_state, iterations=10000, step_size=0.1):
-    num_teams = len(prior_state['teams'])
+    # Team IDs are not contiguous (relegated teams are removed, promoted teams keep
+    # their historical IDs), so iterate over the state's own keys.
+    team_ids = sorted(int(k) for k in prior_state['teams'])
+    priors = {t: prior_state['teams'][str(t)] for t in team_ids}
 
     # Start the walk exactly where we left off last week
     c_home = prior_state["home_adv"]["mean"]
-    c_att = [prior_state["teams"][str(i)]["att_mean"] for i in range(num_teams)]
-    c_def = [prior_state["teams"][str(i)]["def_mean"] for i in range(num_teams)]
+    c_att = {t: priors[t]["att_mean"] for t in team_ids}
+    c_def = {t: priors[t]["def_mean"] for t in team_ids}
 
-    traces = {"home": [], "att": [[] for _ in range(num_teams)], "def": [[] for _ in range(num_teams)]}
+    # A team's rating only affects its own matches, so the likelihood ratio for
+    # a single-team proposal only needs those matches.
+    team_matches = {t: [m for m in matches if t in (m[0], m[1])] for t in team_ids}
+
+    traces = {"home": [], "att": {t: [] for t in team_ids}, "def": {t: [] for t in team_ids}}
 
     for _ in range(iterations):
         # Home Sweep
         p_home = c_home + random.gauss(0, step_size)
         ll_diff = get_likelihood(matches, p_home, c_att, c_def) - get_likelihood(matches, c_home, c_att, c_def)
-        pr_diff = get_prior(p_home, prior_state["home_adv"]["mean"], prior_state["home_adv"]["var"]) - \
-                  get_prior(c_home, prior_state["home_adv"]["mean"], prior_state["home_adv"]["var"])
+        pr_diff = get_prior(p_home, prior_state["home_adv"]["mean"], prior_state["home_adv"]["var"]) -                   get_prior(c_home, prior_state["home_adv"]["mean"], prior_state["home_adv"]["var"])
         if ll_diff + pr_diff > 0 or random.random() < math.exp(max(min(ll_diff + pr_diff, 0), -100)):
             c_home = p_home
 
         # Team Sweeps
-        for t in range(num_teams):
-            p_att = list(c_att); p_att[t] += random.gauss(0, step_size)
-            ll_diff = get_likelihood(matches, c_home, p_att, c_def) - get_likelihood(matches, c_home, c_att, c_def)
-            pr_diff = get_prior(p_att[t], prior_state["teams"][str(t)]["att_mean"], prior_state["teams"][str(t)]["att_var"]) - \
-                      get_prior(c_att[t], prior_state["teams"][str(t)]["att_mean"], prior_state["teams"][str(t)]["att_var"])
+        for t in team_ids:
+            local = team_matches[t]
+
+            p_att = dict(c_att); p_att[t] += random.gauss(0, step_size)
+            ll_diff = get_likelihood(local, c_home, p_att, c_def) - get_likelihood(local, c_home, c_att, c_def)
+            pr_diff = get_prior(p_att[t], priors[t]["att_mean"], priors[t]["att_var"]) -                       get_prior(c_att[t], priors[t]["att_mean"], priors[t]["att_var"])
             if ll_diff + pr_diff > 0 or random.random() < math.exp(max(min(ll_diff + pr_diff, 0), -100)):
                 c_att = p_att
 
-            p_def = list(c_def); p_def[t] += random.gauss(0, step_size)
-            ll_diff = get_likelihood(matches, c_home, c_att, p_def) - get_likelihood(matches, c_home, c_att, c_def)
-            pr_diff = get_prior(p_def[t], prior_state["teams"][str(t)]["def_mean"], prior_state["teams"][str(t)]["def_var"]) - \
-                      get_prior(c_def[t], prior_state["teams"][str(t)]["def_mean"], prior_state["teams"][str(t)]["def_var"])
+            p_def = dict(c_def); p_def[t] += random.gauss(0, step_size)
+            ll_diff = get_likelihood(local, c_home, c_att, p_def) - get_likelihood(local, c_home, c_att, c_def)
+            pr_diff = get_prior(p_def[t], priors[t]["def_mean"], priors[t]["def_var"]) -                       get_prior(c_def[t], priors[t]["def_mean"], priors[t]["def_var"])
             if ll_diff + pr_diff > 0 or random.random() < math.exp(max(min(ll_diff + pr_diff, 0), -100)):
                 c_def = p_def
 
-        # Anchor
-        m_att, m_def = sum(c_att)/num_teams, sum(c_def)/num_teams
-        c_att = [a - m_att for a in c_att]; c_def = [d - m_def for d in c_def]
+        # Anchor: Sum-to-Zero over this season's teams
+        m_att = sum(c_att.values()) / len(team_ids)
+        m_def = sum(c_def.values()) / len(team_ids)
+        c_att = {t: a - m_att for t, a in c_att.items()}
+        c_def = {t: d - m_def for t, d in c_def.items()}
 
         traces['home'].append(c_home)
-        for t in range(num_teams):
+        for t in team_ids:
             traces['att'][t].append(c_att[t]); traces["def"][t].append(c_def[t])
 
     return traces
 
-def load_matches(filename):
-    matches = []
-    with open(filename, mode='r') as f:
-        reader = csv.reader(f)
-        next(reader, None) # skip header
-        for row in reader:
-            matches.append((int(row[0]), int(row[1]), int(row[2]), int(row[3])))
-    return matches
-
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        print('Usage: python w_bhm.py <new_matches.csv> <previous_ratings.json>')
+    parser = argparse.ArgumentParser(description="MCMC Weekly State Updater")
+    parser.add_argument("--season", required=True, help="Season code, e.g. 2627")
+    parser.add_argument("--round", type=int, required=True,
+                        help="Round whose results to add; reads ratings of round-1, writes ratings of round")
+    args = parser.parse_args()
+
+    conn = db.connect()
+    prior_state = db.load_state(conn, args.season, args.round - 1)
+    if prior_state is None:
+        print(f"[Error] No ratings for season {args.season} round {args.round - 1}. "
+              f"Run round {args.round - 1} first (round 0 comes from y_bhm.py).")
         sys.exit(1)
 
-    csv_file = sys.argv[1]
-    json_file = sys.argv[2]
+    fixtures = db.get_fixtures(conn, args.season, args.round)
+    weekly_matches = db.get_results(conn, args.season, args.round)
+    if not weekly_matches:
+        print(f"[Error] No results for season {args.season} round {args.round}. Run fetch.py first.")
+        sys.exit(1)
+    if len(weekly_matches) < len(fixtures):
+        print(f"[Warning] Only {len(weekly_matches)} of {len(fixtures)} round {args.round} matches have results; "
+              f"the rest will be skipped.")
+    late = conn.execute('''SELECT COUNT(*) FROM matches WHERE season = ? AND round < ? AND home_goals IS NULL''',
+                        (args.season, args.round)).fetchone()[0]
+    if late:
+        print(f"[Warning] {late} match(es) from earlier rounds are still unplayed (postponed?). "
+              f"Their results won't be included when they are played.")
 
-    print(f"Loading Prior Memory: {json_file}")
-    with open(json_file, 'r') as f:
-        prior_state = json.load(f)
-        
-    print(f"Loading New Match Evidence: {csv_file}")
-    weekly_matches = load_matches(csv_file)
-    
-    print("Running Bayesian Update...")
+    unknown = sorted({i for m in weekly_matches for i in m[:2]} - {int(k) for k in prior_state['teams']})
+    if unknown:
+        print(f"[Error] Team IDs {unknown} are not in the round {args.round - 1} ratings. "
+              f"Re-run y_bhm.py to initialise promoted teams.")
+        sys.exit(1)
+
+    print(f"Running Bayesian Update on {len(weekly_matches)} matches (season {args.season} round {args.round})...")
     traces = run_mcmc(weekly_matches, prior_state)
 
-    # 5. Calculate New State & Apply Evolutionary Noise
+    # Calculate New State & Apply Evolutionary Noise
     burn_in = int(len(traces["home"]) * 0.2)
     time_decay = 0.005 # Injects uncertainty to adapt to sudden form changes
-    num_teams = len(prior_state["teams"])
 
     new_state = {"home_adv": {}, "teams": {}}
     new_state["home_adv"]["mean"] = statistics.median(traces["home"][burn_in:])
     new_state["home_adv"]["var"] = min(statistics.variance(traces["home"][burn_in:]) + time_decay, 0.05)
-    
-    for t in range(num_teams):
+
+    for t in traces["att"]:
         new_state["teams"][str(t)] = {
             "name": prior_state["teams"][str(t)]["name"],
             "att_mean": statistics.median(traces["att"][t][burn_in:]),
@@ -115,12 +132,5 @@ if __name__ == '__main__':
             "def_var": min(statistics.variance(traces["def"][t][burn_in:]) + time_decay, 0.05)
         }
 
-    # --- MODIFIED: Use os.path.basename to strip away any existing 'state/' folder prefix ---
-    base_name = os.path.basename(json_file).replace(".json", "_updated.json")
-    new_filename = os.path.join('state', base_name)
-    
-    with open(new_filename, 'w') as f:
-        json.dump(new_state, f, indent=4)
-        
-    print(f"Update complete! Hand-off state saved to: {new_filename}")
-
+    db.save_state(conn, args.season, args.round, new_state)
+    print(f"Update complete! Saved ratings: season {args.season}, round {args.round}")

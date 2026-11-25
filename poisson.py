@@ -1,11 +1,11 @@
-import os
 import sys
-import json
 import math
 import numpy as np
 import pandas as pd
 import argparse
 from scipy.stats import poisson
+
+import db
 
 def dc_pois(lambda_h: float, lambda_a: float, rho: float, max_goals: int = 5):
     '''
@@ -119,100 +119,90 @@ def predict_single(state, h_id, a_id, rho=-0.1285): # -0.1285 is a general rho n
     print(f"Draw:     {final_odds['Draw'] * 100:.2f}%")
     print(f"Away Win: {final_odds['Away_Win'] * 100:.2f}%")
 
-def predict_batch(state, fixtures_csv, rho=-0.1285, state_filepath=None):
+def predict_batch(state, fixtures, rating_round, rho=-0.1285):
     '''
-    Predicts a full weekend CSV and saves ALL probabilities to a summary DataFrame
+    Predicts every fixture (rows from db.get_fixtures) and returns prediction dicts
+    ready for db.save_predictions.
     '''
-    if not os.path.exists(fixtures_csv):
-        print(f"[Error] Could not find {fixtures_csv}")
-        sys.exit(1)
-        
-    name_to_id = {info['name']: str(t_id) for t_id, info in state['teams'].items()}
-    fixtures = pd.read_csv(fixtures_csv)
-    results = []
-    
-    state_updated = False
-    
-    for index, row in fixtures.iterrows():
-        home_name = str(row['HomeTeam']).strip()
-        away_name = str(row['AwayTeam']).strip()
-        
-        # PROMOTED TEAM INITIALIZATION LOGIC
-        for team_name in [home_name, away_name]:
-            if team_name not in name_to_id:
-                existing_ids = [int(k) for k in state['teams'].keys()]
-                new_id = str(max(existing_ids) + 1 if existing_ids else 1)
-                
-                state['teams'][new_id] = {'name': team_name, 'att_mean': 0.0, 'def_mean': 0.0}
-                name_to_id[team_name] = new_id
-                state_updated = True
-                print(f"  [+] Initialized promoted team: {team_name} (ID: {new_id})")
-            
-        h_id = name_to_id[home_name]
-        a_id = name_to_id[away_name]
-        
-        _, _, lambda_h, lambda_a = get_params(state, h_id, a_id)
-        
+    predictions = []
+    for fx in fixtures:
+        # Promoted teams must be initialised by y_bhm.py, which gives them a proper
+        # prior. Silently treating them as average (0.0) teams is wrong.
+        for tid, name in [(fx['home_id'], fx['home']), (fx['away_id'], fx['away'])]:
+            if str(tid) not in state['teams']:
+                print(f"[Error] '{name}' is not in the ratings. Re-run y_bhm.py to initialise promoted teams.")
+                sys.exit(1)
+
+        _, _, lambda_h, lambda_a = get_params(state, str(fx['home_id']), str(fx['away_id']))
         matrix = dc_pois(lambda_h, lambda_a, rho)
-        
-        # Calculate BOTH markets
         ou_probs = calculate_ou_25(matrix)
         odds_1x2 = calculate_1x2_odds(matrix)
-        
-        # Append ALL predictions
-        results.append({
-            "Home Team": home_name,
-            "Away Team": away_name,
-            "xG_H": round(lambda_h, 2),
-            "xG_A": round(lambda_a, 2),
-            "Prob_H": odds_1x2['Home_Win'],
-            "Prob_D": odds_1x2['Draw'],
-            "Prob_A": odds_1x2['Away_Win'],
-            "Prob_Over_25": ou_probs['Over_25'],
-            "Prob_Under_25": ou_probs['Under_25'],
-            "Odds_Over_25": float(row.get('Odds_Over_25', 0.0)),
-            "Odds_Under_25": float(row.get('Odds_Under_25', 0.0))
+
+        predictions.append({
+            'match_id': fx['id'],
+            'rating_round': rating_round,
+            'home': fx['home'],
+            'away': fx['away'],
+            'xg_h': round(lambda_h, 2),
+            'xg_a': round(lambda_a, 2),
+            'prob_h': odds_1x2['Home_Win'],
+            'prob_d': odds_1x2['Draw'],
+            'prob_a': odds_1x2['Away_Win'],
+            'prob_over_25': ou_probs['Over_25'],
+            'prob_under_25': ou_probs['Under_25'],
         })
-        
-    df_results = pd.DataFrame(results)
-    
+    return predictions
+
+
+def print_predictions(predictions, title):
+    df = pd.DataFrame(predictions)[['home', 'away', 'xg_h', 'xg_a', 'prob_h', 'prob_d', 'prob_a',
+                                    'prob_over_25', 'prob_under_25']]
+    df.columns = ['Home Team', 'Away Team', 'xG_H', 'xG_A', 'Prob_H', 'Prob_D', 'Prob_A',
+                  'Prob_Over_25', 'Prob_Under_25']
     print("\n" + "="*100)
-    print(f" MATCHDAY PREDICTIONS SUMMARY".center(100))
+    print(title.center(100))
     print("="*100)
-    # Print the expanded view to the terminal
-    display_cols = ['Home Team', 'Away Team', 'xG_H', 'xG_A', 'Prob_H', 'Prob_D', 'Prob_A', 'Prob_Over_25', 'Prob_Under_25']
-    print(df_results[display_cols].to_string(index=False))
+    print(df.to_string(index=False))
     print("="*100 + "\n")
-
-    base_filename = os.path.basename(fixtures_csv)
-    output_filename = base_filename.replace('.csv', '_predictions.csv')
-    output_filepath = os.path.join('prediction', output_filename)
-
-    # Save everything to the CSV so kelly_sizing.py can still read it
-    df_results.to_csv(output_filepath, index=False)
-    print(f"Saved Matchday Predictions to: {output_filepath}")
-
-    # Save state if new teams were initialized
-    if state_updated and state_filepath:
-        with open(state_filepath, 'w') as f:
-            json.dump(state, f, indent=4)
-        print(f"Saved updated JSON state to: {state_filepath}")  
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Dixon-Coles Match Predictor")
-    parser.add_argument("--state", required=True, help="Path to state JSON file")
-    
+    parser.add_argument("--season", required=True, help="Season code, e.g. 2627")
+
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--match", nargs=2, metavar=('HOME_ID', 'AWAY_ID'), help="Predict single match using team IDs")
-    group.add_argument("--batch", help="Path to fixtures CSV for matchday summary")
-    
+    group.add_argument("--round", type=int, help="Predict every fixture of this round (uses ratings of round-1)")
+    group.add_argument("--match", nargs=2, metavar=('HOME', 'AWAY'),
+                       help="Predict a single match (team names or IDs) with the latest ratings")
     args = parser.parse_args()
 
-    with open(args.state, 'r') as f:
-        current_state = json.load(f)
+    conn = db.connect()
 
     if args.match:
-        predict_single(current_state, args.match[0], args.match[1])
-    elif args.batch:
-        predict_batch(current_state, args.batch, state_filepath=args.state)
+        rating_round = db.latest_round(conn, args.season)
+        state = db.load_state(conn, args.season, rating_round) if rating_round is not None else None
+        if state is None:
+            print(f"[Error] No ratings for season {args.season}.")
+            sys.exit(1)
+        ids = []
+        for t in args.match:
+            tid = int(t) if t.isdigit() else db.resolve_team(conn, t)
+            if tid is None or str(tid) not in state['teams']:
+                print(f"[Error] Team '{t}' not found in the season {args.season} ratings.")
+                sys.exit(1)
+            ids.append(str(tid))
+        print(f"Using ratings after round {rating_round}")
+        predict_single(state, ids[0], ids[1])
+    else:
+        state = db.load_state(conn, args.season, args.round - 1)
+        if state is None:
+            print(f"[Error] No ratings for season {args.season} round {args.round - 1}. Run w_bhm.py first.")
+            sys.exit(1)
+        fixtures = db.get_fixtures(conn, args.season, args.round)
+        if not fixtures:
+            print(f"[Error] No fixtures for season {args.season} round {args.round}. Run fetch.py first.")
+            sys.exit(1)
+        predictions = predict_batch(state, fixtures, args.round - 1)
+        print_predictions(predictions, f"ROUND {args.round} PREDICTIONS (ratings after round {args.round - 1})")
+        db.save_predictions(conn, predictions)
+        print(f"Saved {len(predictions)} predictions: season {args.season}, round {args.round}")
