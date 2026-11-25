@@ -1,12 +1,25 @@
-# Football Analytics
+# Sequential Bayesian Football Prediction
 
-Premier League match predictions and over/under 2.5 bet sizing.
+A prediction pipeline that looks for an edge on Premier League matches.
 
 1. **Team ratings.** A Bayesian model, fitted with MCMC (Markov chain Monte Carlo), gives every team an attack and a defence rating. It also estimates one home-advantage term for the league. Ratings start from last season's results and are updated after every gameweek.
-2. **Match probabilities.** Each fixture's ratings become expected goals for both sides. A Dixon-Coles Poisson model turns those into scoreline probabilities, then into home/draw/away and over/under 2.5 probabilities.
+2. **Match probabilities.** Each fixture's ratings become expected goals (xG) for both sides. A Dixon-Coles Poisson model turns those into scoreline probabilities, then into home/draw/away and over/under 2.5 probabilities.
 3. **Bet sizing.** The over/under probabilities are compared with bookmaker odds, and fractional Kelly sizes a stake whenever the expected value is positive.
 
 Everything (teams, results, fixtures, odds, ratings, predictions and orders) is stored in one SQLite file, `football.db`.
+
+## Performance
+
+Every prediction is made only from results played before that match, so no future data leaks in. The model is judged mainly on log loss, which is lower for better probabilities; always predicting a third each way scores 1.099 for home/draw/away.
+
+| Test | Home/draw/away | Over/under 2.5 |
+|---|---|---|
+| 2025/26 backtest: 38 weeks, 380 matches | 1.0252 log loss, 0.2089 RPS | 0.7205 log loss, 53.61% correct |
+| 2026/27 live: rounds 1–11, 110 matches | 1.026 log loss, 48% favourite correct | 51% correct |
+
+RPS is the ranked probability score (also lower is better). "Correct" means the more likely outcome was the one that happened.
+
+The 2025/26 backtest was run before the fix for promoted-team ratings.
 
 ## Setup
 
