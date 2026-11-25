@@ -1,0 +1,381 @@
+Gameweek,Match,Score,Total Goals,True O/U,Pred O/U,Over %,Under %,Log Loss,Brier Score
+1,Liverpool vs Bournemouth,4-2,6,Over,Over,56.0%,44.0%,0.5793,0.1933
+1,Aston Villa vs Newcastle,0-0,0,Under,Over,53.2%,46.8%,0.7599,0.2833
+1,Brighton vs Fulham,1-1,2,Under,Over,59.8%,40.2%,0.9106,0.3572
+1,Sunderland vs West Ham,3-0,3,Over,Under,49.0%,51.0%,0.714,0.2604
+1,Tottenham vs Burnley,3-0,3,Over,Over,66.9%,33.1%,0.4021,0.1096
+1,Wolves vs Man City,0-4,4,Over,Over,64.1%,35.9%,0.4439,0.1285
+1,Chelsea vs Crystal Palace,0-0,0,Under,Under,44.8%,55.2%,0.5942,0.2007
+1,Nott'm Forest vs Brentford,3-1,4,Over,Over,55.5%,44.5%,0.5879,0.1976
+1,Man United vs Arsenal,0-1,1,Under,Under,39.9%,60.1%,0.5088,0.159
+1,Leeds vs Everton,1-0,1,Under,Under,36.4%,63.6%,0.4522,0.1324
+2,West Ham vs Chelsea,1-5,6,Over,Under,48.5%,51.5%,0.7236,0.2652
+2,Man City vs Tottenham,0-2,2,Under,Over,68.2%,31.8%,1.146,0.4653
+2,Bournemouth vs Wolves,1-0,1,Under,Over,59.7%,40.3%,0.9088,0.3564
+2,Brentford vs Aston Villa,1-0,1,Under,Over,58.1%,41.9%,0.8699,0.3376
+2,Burnley vs Sunderland,2-0,2,Under,Under,46.7%,53.3%,0.6283,0.2176
+2,Arsenal vs Leeds,5-0,5,Over,Over,53.4%,46.6%,0.6281,0.2175
+2,Crystal Palace vs Nott'm Forest,1-1,2,Under,Under,42.1%,57.9%,0.5461,0.1771
+2,Everton vs Brighton,2-0,2,Under,Under,42.6%,57.4%,0.5555,0.1816
+2,Fulham vs Man United,1-1,2,Under,Under,41.9%,58.1%,0.5435,0.1758
+2,Newcastle vs Liverpool,2-3,5,Over,Over,59.6%,40.4%,0.5173,0.1631
+3,Chelsea vs Fulham,2-0,2,Under,Under,48.4%,51.6%,0.6622,0.2345
+3,Man United vs Burnley,3-2,5,Over,Under,42.5%,57.5%,0.8552,0.3304
+3,Sunderland vs Brentford,2-1,3,Over,Over,61.6%,38.4%,0.4848,0.1476
+3,Tottenham vs Bournemouth,0-1,1,Under,Over,57.1%,42.9%,0.8456,0.3257
+3,Wolves vs Everton,2-3,5,Over,Under,40.3%,59.7%,0.9091,0.3565
+3,Leeds vs Newcastle,0-0,0,Under,Over,59.1%,40.9%,0.8933,0.3489
+3,Brighton vs Man City,2-1,3,Over,Over,62.5%,37.5%,0.4695,0.1404
+3,Nott'm Forest vs West Ham,0-3,3,Over,Over,52.8%,47.2%,0.6392,0.2231
+3,Liverpool vs Arsenal,1-0,1,Under,Over,52.0%,48.0%,0.7338,0.2703
+3,Aston Villa vs Crystal Palace,0-3,3,Over,Under,42.0%,58.0%,0.8675,0.3364
+4,Arsenal vs Nott'm Forest,3-0,3,Over,Under,42.8%,57.2%,0.8491,0.3274
+4,Bournemouth vs Brighton,2-1,3,Over,Over,54.2%,45.8%,0.6119,0.2095
+4,Crystal Palace vs Sunderland,0-0,0,Under,Under,48.4%,51.6%,0.6626,0.2347
+4,Everton vs Aston Villa,0-0,0,Under,Under,33.7%,66.3%,0.4107,0.1134
+4,Fulham vs Leeds,1-0,1,Under,Under,47.1%,52.9%,0.6364,0.2217
+4,Newcastle vs Wolves,1-0,1,Under,Over,62.4%,37.6%,0.9771,0.3889
+4,West Ham vs Tottenham,0-3,3,Over,Over,60.9%,39.1%,0.4958,0.1528
+4,Brentford vs Chelsea,2-2,4,Over,Over,55.7%,44.3%,0.5859,0.1966
+4,Burnley vs Liverpool,0-1,1,Under,Over,73.3%,26.7%,1.322,0.5379
+4,Man City vs Man United,3-0,3,Over,Under,49.6%,50.4%,0.7008,0.2538
+5,Liverpool vs Everton,2-1,3,Over,Under,44.0%,56.0%,0.8208,0.3135
+5,Brighton vs Tottenham,2-2,4,Over,Over,67.2%,32.8%,0.3971,0.1074
+5,Burnley vs Nott'm Forest,1-1,2,Under,Under,49.4%,50.6%,0.6812,0.244
+5,West Ham vs Crystal Palace,1-2,3,Over,Under,45.9%,54.1%,0.7794,0.293
+5,Wolves vs Leeds,1-3,4,Over,Over,51.0%,49.0%,0.6733,0.2401
+5,Man United vs Chelsea,2-1,3,Over,Under,45.7%,54.3%,0.7833,0.295
+5,Fulham vs Brentford,3-1,4,Over,Over,54.8%,45.2%,0.6022,0.2047
+5,Bournemouth vs Newcastle,0-0,0,Under,Under,42.2%,57.8%,0.5475,0.1777
+5,Sunderland vs Aston Villa,1-1,2,Under,Under,44.3%,55.7%,0.5845,0.1959
+5,Arsenal vs Man City,1-1,2,Under,Under,44.5%,55.5%,0.5888,0.198
+6,Brentford vs Man United,3-1,4,Over,Over,53.2%,46.8%,0.6317,0.2193
+6,Chelsea vs Brighton,1-3,4,Over,Over,60.2%,39.8%,0.508,0.1586
+6,Crystal Palace vs Liverpool,2-1,3,Over,Over,51.5%,48.5%,0.6636,0.2352
+6,Leeds vs Bournemouth,2-2,4,Over,Under,42.0%,58.0%,0.867,0.3362
+6,Man City vs Burnley,5-1,6,Over,Over,58.7%,41.3%,0.5329,0.1707
+6,Nott'm Forest vs Sunderland,0-1,1,Under,Under,46.7%,53.3%,0.6292,0.2181
+6,Tottenham vs Wolves,1-1,2,Under,Over,69.1%,30.9%,1.1734,0.4771
+6,Aston Villa vs Fulham,3-1,4,Over,Under,43.8%,56.2%,0.8265,0.3163
+6,Newcastle vs Arsenal,1-2,3,Over,Under,38.5%,61.5%,0.955,0.3785
+6,Everton vs West Ham,1-1,2,Under,Under,38.3%,61.7%,0.4832,0.1468
+7,Bournemouth vs Fulham,3-1,4,Over,Under,44.6%,55.4%,0.8081,0.3072
+7,Leeds vs Tottenham,1-2,3,Over,Over,57.0%,43.0%,0.5612,0.1845
+7,Arsenal vs West Ham,2-0,2,Under,Over,56.2%,43.8%,0.8258,0.316
+7,Man United vs Sunderland,2-0,2,Under,Under,39.2%,60.8%,0.4971,0.1534
+7,Chelsea vs Liverpool,2-1,3,Over,Over,60.1%,39.9%,0.5098,0.1595
+7,Aston Villa vs Burnley,2-1,3,Over,Over,52.5%,47.5%,0.6434,0.2252
+7,Everton vs Crystal Palace,2-1,3,Over,Under,28.6%,71.4%,1.2511,0.5095
+7,Newcastle vs Nott'm Forest,2-0,2,Under,Under,44.9%,55.1%,0.596,0.2016
+7,Wolves vs Brighton,1-1,2,Under,Over,68.8%,31.2%,1.1644,0.4732
+7,Brentford vs Man City,0-1,1,Under,Over,65.4%,34.6%,1.0622,0.4281
+8,Nott'm Forest vs Chelsea,0-3,3,Over,Over,50.3%,49.7%,0.6874,0.2471
+8,Brighton vs Newcastle,2-1,3,Over,Over,57.0%,43.0%,0.5616,0.1846
+8,Burnley vs Leeds,2-0,2,Under,Under,44.7%,55.3%,0.5926,0.1999
+8,Crystal Palace vs Bournemouth,3-3,6,Over,Under,40.6%,59.4%,0.9009,0.3526
+8,Man City vs Everton,2-0,2,Under,Under,41.3%,58.7%,0.532,0.1702
+8,Sunderland vs Wolves,2-0,2,Under,Over,50.6%,49.4%,0.706,0.2564
+8,Fulham vs Arsenal,0-1,1,Under,Under,48.7%,51.3%,0.6675,0.2372
+8,Tottenham vs Aston Villa,1-2,3,Over,Over,56.4%,43.6%,0.5731,0.1903
+8,Liverpool vs Man United,1-2,3,Over,Over,60.6%,39.4%,0.5012,0.1554
+8,West Ham vs Brentford,0-2,2,Under,Over,62.2%,37.8%,0.9721,0.3865
+9,Leeds vs West Ham,2-1,3,Over,Under,47.7%,52.3%,0.7411,0.2739
+9,Chelsea vs Sunderland,1-2,3,Over,Over,52.0%,48.0%,0.6547,0.2308
+9,Newcastle vs Fulham,2-1,3,Over,Under,49.0%,51.0%,0.7138,0.2603
+9,Man United vs Brighton,4-2,6,Over,Over,54.8%,45.2%,0.602,0.2046
+9,Brentford vs Liverpool,3-2,5,Over,Over,66.3%,33.7%,0.4102,0.1132
+9,Arsenal vs Crystal Palace,1-0,1,Under,Under,45.3%,54.7%,0.6029,0.205
+9,Aston Villa vs Man City,1-0,1,Under,Under,49.5%,50.5%,0.6824,0.2446
+9,Bournemouth vs Nott'm Forest,2-0,2,Under,Under,49.8%,50.2%,0.6888,0.2478
+9,Wolves vs Burnley,2-3,5,Over,Over,55.4%,44.6%,0.59,0.1986
+9,Everton vs Tottenham,0-3,3,Over,Under,42.9%,57.1%,0.8468,0.3263
+10,Brighton vs Leeds,3-0,3,Over,Over,66.5%,33.5%,0.4072,0.1119
+10,Burnley vs Arsenal,0-2,2,Under,Over,53.0%,47.0%,0.7546,0.2807
+10,Crystal Palace vs Brentford,2-0,2,Under,Over,56.5%,43.5%,0.8319,0.319
+10,Fulham vs Wolves,3-0,3,Over,Over,62.3%,37.7%,0.4729,0.142
+10,Nott'm Forest vs Man United,2-2,4,Over,Under,46.2%,53.8%,0.7711,0.2889
+10,Tottenham vs Chelsea,0-1,1,Under,Over,61.1%,38.9%,0.9452,0.3738
+10,Liverpool vs Aston Villa,2-0,2,Under,Over,57.7%,42.3%,0.8601,0.3328
+10,West Ham vs Newcastle,3-1,4,Over,Over,51.6%,48.4%,0.6613,0.2341
+10,Man City vs Bournemouth,3-1,4,Over,Under,49.0%,51.0%,0.7123,0.2596
+10,Sunderland vs Everton,1-1,2,Under,Under,31.4%,68.6%,0.3772,0.0987
+11,Tottenham vs Man United,2-2,4,Over,Over,59.4%,40.6%,0.5202,0.1645
+11,Everton vs Fulham,2-0,2,Under,Under,40.7%,59.3%,0.5227,0.1657
+11,West Ham vs Burnley,3-2,5,Over,Over,58.1%,41.9%,0.5439,0.176
+11,Sunderland vs Arsenal,2-2,4,Over,Under,44.4%,55.6%,0.8131,0.3097
+11,Chelsea vs Wolves,3-0,3,Over,Over,67.6%,32.4%,0.3919,0.1051
+11,Aston Villa vs Bournemouth,4-0,4,Over,Under,45.6%,54.4%,0.7864,0.2965
+11,Brentford vs Newcastle,3-1,4,Over,Over,57.6%,42.4%,0.5511,0.1795
+11,Crystal Palace vs Brighton,0-0,0,Under,Over,60.0%,40.0%,0.9155,0.3596
+11,Nott'm Forest vs Leeds,3-1,4,Over,Over,50.6%,49.4%,0.681,0.2439
+11,Man City vs Liverpool,3-0,3,Over,Over,62.5%,37.5%,0.4705,0.1409
+12,Burnley vs Chelsea,0-2,2,Under,Over,59.6%,40.4%,0.9066,0.3553
+12,Bournemouth vs West Ham,2-2,4,Over,Over,66.8%,33.2%,0.4036,0.1103
+12,Brighton vs Brentford,2-1,3,Over,Over,72.7%,27.3%,0.3183,0.0743
+12,Fulham vs Sunderland,1-0,1,Under,Over,56.0%,44.0%,0.821,0.3136
+12,Liverpool vs Nott'm Forest,0-3,3,Over,Over,72.3%,27.7%,0.3241,0.0766
+12,Wolves vs Crystal Palace,0-2,2,Under,Over,56.3%,43.7%,0.8285,0.3173
+12,Newcastle vs Man City,2-1,3,Over,Over,55.1%,44.9%,0.5962,0.2017
+12,Leeds vs Aston Villa,1-2,3,Over,Over,50.8%,49.2%,0.6773,0.2421
+12,Arsenal vs Tottenham,4-1,5,Over,Over,61.9%,38.1%,0.4793,0.145
+12,Man United vs Everton,0-1,1,Under,Under,45.1%,54.9%,0.5997,0.2034
+13,Brentford vs Burnley,3-1,4,Over,Over,70.0%,30.0%,0.357,0.0901
+13,Man City vs Leeds,3-2,5,Over,Over,70.4%,29.6%,0.3513,0.0877
+13,Sunderland vs Bournemouth,3-2,5,Over,Under,49.9%,50.2%,0.6962,0.2515
+13,Everton vs Newcastle,1-4,5,Over,Under,38.4%,61.6%,0.9582,0.3799
+13,Tottenham vs Fulham,1-2,3,Over,Over,62.9%,37.1%,0.4635,0.1376
+13,Crystal Palace vs Man United,1-2,3,Over,Under,45.7%,54.3%,0.7822,0.2944
+13,Aston Villa vs Wolves,1-0,1,Under,Over,63.5%,36.5%,1.007,0.4028
+13,Nott'm Forest vs Brighton,0-2,2,Under,Over,61.0%,39.0%,0.9408,0.3717
+13,West Ham vs Liverpool,0-2,2,Under,Over,70.3%,29.7%,1.2147,0.4945
+13,Chelsea vs Arsenal,1-1,2,Under,Under,43.3%,56.7%,0.5667,0.1871
+14,Bournemouth vs Everton,0-1,1,Under,Under,45.2%,54.8%,0.6008,0.2039
+14,Fulham vs Man City,4-5,9,Over,Over,54.0%,46.0%,0.6153,0.2111
+14,Newcastle vs Tottenham,2-2,4,Over,Over,64.5%,35.5%,0.438,0.1258
+14,Arsenal vs Brentford,2-0,2,Under,Over,58.4%,41.6%,0.8778,0.3414
+14,Brighton vs Aston Villa,3-4,7,Over,Under,49.0%,51.0%,0.7129,0.2599
+14,Burnley vs Crystal Palace,0-1,1,Under,Under,46.6%,53.4%,0.6275,0.2172
+14,Wolves vs Nott'm Forest,0-1,1,Under,Over,52.7%,47.3%,0.7491,0.2779
+14,Leeds vs Chelsea,3-1,4,Over,Over,52.2%,47.8%,0.6503,0.2286
+14,Liverpool vs Sunderland,1-1,2,Under,Over,61.4%,38.6%,0.9514,0.3768
+14,Man United vs West Ham,1-1,2,Under,Over,57.1%,42.9%,0.8454,0.3256
+15,Aston Villa vs Arsenal,2-1,3,Over,Under,41.5%,58.5%,0.8802,0.3426
+15,Bournemouth vs Chelsea,0-0,0,Under,Over,52.3%,47.7%,0.7398,0.2733
+15,Everton vs Nott'm Forest,3-0,3,Over,Under,34.8%,65.2%,1.055,0.4248
+15,Man City vs Sunderland,3-0,3,Over,Over,64.6%,35.4%,0.4374,0.1255
+15,Newcastle vs Burnley,2-1,3,Over,Over,63.2%,36.8%,0.4593,0.1356
+15,Tottenham vs Brentford,2-0,2,Under,Over,67.9%,32.1%,1.1357,0.4608
+15,Leeds vs Liverpool,3-3,6,Over,Over,61.3%,38.7%,0.4896,0.1498
+15,Brighton vs West Ham,1-1,2,Under,Over,68.8%,31.2%,1.1654,0.4736
+15,Fulham vs Crystal Palace,1-2,3,Over,Under,44.4%,55.6%,0.8119,0.3091
+15,Wolves vs Man United,1-4,5,Over,Over,50.9%,49.1%,0.6761,0.2415
+16,Chelsea vs Everton,2-0,2,Under,Under,38.2%,61.8%,0.4813,0.1459
+16,Liverpool vs Brighton,2-0,2,Under,Over,70.5%,29.5%,1.2204,0.4969
+16,Burnley vs Fulham,2-3,5,Over,Over,54.0%,46.0%,0.6158,0.2114
+16,Arsenal vs Wolves,2-1,3,Over,Over,71.9%,28.1%,0.3306,0.0792
+16,Crystal Palace vs Man City,0-3,3,Over,Under,49.9%,50.1%,0.6953,0.2511
+16,Nott'm Forest vs Tottenham,3-0,3,Over,Over,55.3%,44.7%,0.5922,0.1997
+16,Sunderland vs Newcastle,1-0,1,Under,Over,50.1%,49.9%,0.696,0.2514
+16,West Ham vs Aston Villa,2-3,5,Over,Over,52.8%,47.2%,0.6383,0.2226
+16,Brentford vs Leeds,1-1,2,Under,Over,64.8%,35.2%,1.0436,0.4196
+16,Man United vs Bournemouth,4-4,8,Over,Over,50.4%,49.6%,0.6846,0.2457
+17,Newcastle vs Chelsea,2-2,4,Over,Under,49.0%,51.0%,0.7125,0.2597
+17,Bournemouth vs Burnley,1-1,2,Under,Over,63.8%,36.2%,1.0169,0.4074
+17,Brighton vs Sunderland,0-0,0,Under,Over,53.7%,46.3%,0.7692,0.2879
+17,Man City vs West Ham,3-0,3,Over,Over,77.8%,22.2%,0.2506,0.0492
+17,Wolves vs Brentford,0-2,2,Under,Over,61.6%,38.4%,0.9558,0.3788
+17,Tottenham vs Liverpool,1-2,3,Over,Over,66.5%,33.5%,0.4072,0.1119
+17,Everton vs Arsenal,0-1,1,Under,Under,35.7%,64.3%,0.4419,0.1276
+17,Leeds vs Crystal Palace,4-1,5,Over,Under,44.0%,56.0%,0.8221,0.3142
+17,Aston Villa vs Man United,2-1,3,Over,Over,59.5%,40.5%,0.5192,0.164
+17,Fulham vs Nott'm Forest,1-0,1,Under,Over,56.5%,43.5%,0.8331,0.3196
+18,Man United vs Newcastle,1-0,1,Under,Over,60.7%,39.3%,0.9345,0.3687
+18,Nott'm Forest vs Man City,1-2,3,Over,Over,57.0%,43.0%,0.5612,0.1845
+18,Arsenal vs Brighton,2-1,3,Over,Over,50.2%,49.8%,0.69,0.2484
+18,Brentford vs Bournemouth,4-1,5,Over,Over,58.5%,41.5%,0.5363,0.1723
+18,Burnley vs Everton,0-0,0,Under,Under,39.9%,60.1%,0.5093,0.1593
+18,Liverpool vs Wolves,2-1,3,Over,Over,72.3%,27.7%,0.3246,0.0768
+18,West Ham vs Fulham,0-1,1,Under,Over,61.4%,38.6%,0.9517,0.3769
+18,Chelsea vs Aston Villa,1-2,3,Over,Under,48.7%,51.3%,0.7199,0.2634
+18,Sunderland vs Leeds,1-1,2,Under,Under,46.8%,53.2%,0.6319,0.2194
+18,Crystal Palace vs Tottenham,0-1,1,Under,Over,52.3%,47.7%,0.74,0.2734
+19,Burnley vs Newcastle,1-3,4,Over,Under,49.4%,50.6%,0.7048,0.2558
+19,Chelsea vs Bournemouth,2-2,4,Over,Over,55.9%,44.1%,0.5811,0.1942
+19,Nott'm Forest vs Everton,0-2,2,Under,Under,32.0%,68.0%,0.3854,0.1023
+19,West Ham vs Brighton,2-2,4,Over,Over,56.0%,44.0%,0.5804,0.1939
+19,Arsenal vs Aston Villa,4-1,5,Over,Under,41.9%,58.1%,0.8696,0.3374
+19,Man United vs Wolves,1-1,2,Under,Over,60.7%,39.3%,0.9327,0.3678
+19,Crystal Palace vs Fulham,1-1,2,Under,Under,45.9%,54.1%,0.6143,0.2107
+19,Liverpool vs Leeds,0-0,0,Under,Over,64.9%,35.1%,1.0473,0.4213
+19,Brentford vs Tottenham,0-0,0,Under,Over,60.7%,39.3%,0.935,0.3689
+19,Sunderland vs Man City,0-0,0,Under,Over,56.1%,43.9%,0.8223,0.3143
+20,Aston Villa vs Nott'm Forest,3-1,4,Over,Over,50.3%,49.7%,0.688,0.2474
+20,Brighton vs Burnley,2-0,2,Under,Over,54.8%,45.2%,0.7936,0.3001
+20,Wolves vs West Ham,3-0,3,Over,Over,52.6%,47.4%,0.6423,0.2246
+20,Bournemouth vs Arsenal,2-3,5,Over,Over,55.0%,45.0%,0.5973,0.2022
+20,Leeds vs Man United,1-1,2,Under,Over,50.7%,49.3%,0.7072,0.257
+20,Everton vs Brentford,2-4,6,Over,Under,37.2%,62.8%,0.9886,0.3943
+20,Newcastle vs Crystal Palace,2-0,2,Under,Under,44.6%,55.4%,0.5906,0.1989
+20,Tottenham vs Sunderland,1-1,2,Under,Under,37.7%,62.3%,0.473,0.1421
+20,Fulham vs Liverpool,2-2,4,Over,Over,54.6%,45.4%,0.6055,0.2063
+20,Man City vs Chelsea,1-1,2,Under,Over,56.3%,43.7%,0.8281,0.3171
+21,West Ham vs Nott'm Forest,1-2,3,Over,Over,50.3%,49.7%,0.6862,0.2465
+21,Bournemouth vs Tottenham,3-2,5,Over,Over,60.7%,39.3%,0.4987,0.1542
+21,Brentford vs Sunderland,3-0,3,Over,Under,45.6%,54.4%,0.7861,0.2964
+21,Crystal Palace vs Aston Villa,0-0,0,Under,Under,46.6%,53.4%,0.627,0.217
+21,Everton vs Wolves,1-1,2,Under,Under,44.3%,55.7%,0.585,0.1962
+21,Fulham vs Chelsea,2-1,3,Over,Over,53.1%,46.9%,0.6322,0.2196
+21,Man City vs Brighton,1-1,2,Under,Over,61.9%,38.1%,0.9657,0.3835
+21,Burnley vs Man United,2-2,4,Over,Under,47.2%,52.8%,0.7499,0.2784
+21,Newcastle vs Leeds,4-3,7,Over,Over,54.6%,45.4%,0.6057,0.2064
+21,Arsenal vs Liverpool,0-0,0,Under,Over,53.1%,46.9%,0.7576,0.2822
+22,Man United vs Man City,2-0,2,Under,Over,56.3%,43.7%,0.8278,0.317
+22,Chelsea vs Brentford,2-0,2,Under,Over,57.1%,42.9%,0.8472,0.3265
+22,Leeds vs Fulham,1-0,1,Under,Over,60.8%,39.2%,0.9373,0.37
+22,Liverpool vs Burnley,1-1,2,Under,Over,57.4%,42.6%,0.8528,0.3292
+22,Sunderland vs Crystal Palace,2-1,3,Over,Under,27.8%,72.2%,1.2801,0.5213
+22,Tottenham vs West Ham,1-2,3,Over,Over,61.4%,38.6%,0.4878,0.149
+22,Nott'm Forest vs Arsenal,0-0,0,Under,Under,44.7%,55.3%,0.5931,0.2002
+22,Wolves vs Newcastle,0-0,0,Under,Over,60.0%,40.0%,0.9165,0.3601
+22,Aston Villa vs Everton,0-1,1,Under,Under,45.1%,54.9%,0.6,0.2036
+22,Brighton vs Bournemouth,1-1,2,Under,Over,65.4%,34.6%,1.0602,0.4272
+23,West Ham vs Sunderland,3-1,4,Over,Under,44.9%,55.1%,0.8014,0.3039
+23,Burnley vs Tottenham,2-2,4,Over,Under,48.3%,51.7%,0.7277,0.2673
+23,Fulham vs Brighton,2-1,3,Over,Over,54.7%,45.3%,0.6029,0.205
+23,Man City vs Wolves,2-0,2,Under,Over,55.9%,44.1%,0.8192,0.3127
+23,Bournemouth vs Liverpool,3-2,5,Over,Over,60.5%,39.5%,0.5025,0.156
+23,Brentford vs Nott'm Forest,0-2,2,Under,Over,51.3%,48.7%,0.7195,0.2632
+23,Crystal Palace vs Chelsea,1-3,4,Over,Under,38.5%,61.5%,0.955,0.3785
+23,Newcastle vs Aston Villa,0-2,2,Under,Over,55.9%,44.1%,0.8183,0.3123
+23,Arsenal vs Man United,2-3,5,Over,Under,44.2%,55.8%,0.816,0.3111
+23,Everton vs Leeds,1-1,2,Under,Under,42.4%,57.6%,0.5508,0.1794
+24,Brighton vs Everton,1-1,2,Under,Under,40.3%,59.7%,0.516,0.1625
+24,Leeds vs Arsenal,0-4,4,Over,Under,49.1%,50.9%,0.7117,0.2593
+24,Wolves vs Bournemouth,0-2,2,Under,Over,56.3%,43.7%,0.8285,0.3173
+24,Chelsea vs West Ham,3-2,5,Over,Over,59.9%,40.1%,0.5127,0.1609
+24,Liverpool vs Newcastle,4-1,5,Over,Over,54.5%,45.5%,0.6068,0.2069
+24,Aston Villa vs Brentford,0-1,1,Under,Over,55.5%,44.5%,0.8097,0.308
+24,Man United vs Fulham,3-2,5,Over,Over,59.2%,40.8%,0.5237,0.1662
+24,Nott'm Forest vs Crystal Palace,1-1,2,Under,Under,34.7%,65.3%,0.4263,0.1205
+24,Tottenham vs Man City,2-2,4,Over,Over,57.4%,42.6%,0.556,0.1819
+24,Sunderland vs Burnley,3-0,3,Over,Under,39.1%,60.9%,0.9398,0.3712
+25,Leeds vs Nott'm Forest,3-1,4,Over,Under,44.9%,55.1%,0.8005,0.3035
+25,Man United vs Tottenham,2-0,2,Under,Over,64.3%,35.7%,1.0295,0.4132
+25,Arsenal vs Sunderland,3-0,3,Over,Under,48.9%,51.1%,0.7152,0.261
+25,Bournemouth vs Aston Villa,1-1,2,Under,Over,55.6%,44.4%,0.8128,0.3096
+25,Burnley vs West Ham,0-2,2,Under,Over,56.5%,43.5%,0.8322,0.3191
+25,Fulham vs Everton,1-2,3,Over,Under,45.0%,55.0%,0.7976,0.3021
+25,Wolves vs Chelsea,1-3,4,Over,Under,46.7%,53.3%,0.761,0.2839
+25,Newcastle vs Brentford,2-3,5,Over,Over,59.8%,40.2%,0.5135,0.1613
+25,Brighton vs Crystal Palace,0-1,1,Under,Under,42.9%,57.1%,0.5602,0.184
+25,Liverpool vs Man City,1-2,3,Over,Over,54.7%,45.3%,0.6028,0.2049
+26,Chelsea vs Leeds,2-2,4,Over,Over,60.0%,40.0%,0.5115,0.1603
+26,Everton vs Bournemouth,1-2,3,Over,Under,47.3%,52.7%,0.7493,0.278
+26,Tottenham vs Newcastle,1-2,3,Over,Over,60.9%,39.1%,0.4964,0.1531
+26,West Ham vs Man United,1-1,2,Under,Over,64.7%,35.3%,1.0404,0.4182
+26,Aston Villa vs Brighton,1-0,1,Under,Under,43.9%,56.1%,0.5787,0.1931
+26,Crystal Palace vs Burnley,2-3,5,Over,Under,38.7%,61.3%,0.9486,0.3754
+26,Man City vs Fulham,3-0,3,Over,Over,62.3%,37.7%,0.4734,0.1422
+26,Nott'm Forest vs Wolves,0-0,0,Under,Under,39.9%,60.1%,0.5083,0.1588
+26,Sunderland vs Liverpool,0-1,1,Under,Under,48.4%,51.6%,0.6616,0.2343
+26,Brentford vs Arsenal,1-1,2,Under,Over,52.6%,47.4%,0.7459,0.2764
+27,Aston Villa vs Leeds,1-1,2,Under,Under,48.3%,51.7%,0.6589,0.2329
+27,Brentford vs Brighton,0-2,2,Under,Over,50.4%,49.6%,0.702,0.2544
+27,Chelsea vs Burnley,1-1,2,Under,Over,63.3%,36.7%,1.0021,0.4006
+27,West Ham vs Bournemouth,0-0,0,Under,Over,65.9%,34.1%,1.0765,0.4345
+27,Man City vs Newcastle,2-1,3,Over,Over,60.1%,39.9%,0.5092,0.1592
+27,Crystal Palace vs Wolves,1-0,1,Under,Under,34.4%,65.6%,0.4214,0.1183
+27,Nott'm Forest vs Liverpool,0-1,1,Under,Under,42.1%,57.9%,0.5461,0.1771
+27,Sunderland vs Fulham,1-3,4,Over,Under,45.7%,54.3%,0.7829,0.2947
+27,Tottenham vs Arsenal,1-4,5,Over,Over,52.6%,47.4%,0.6425,0.2247
+27,Everton vs Man United,0-1,1,Under,Under,41.9%,58.1%,0.5435,0.1758
+28,Wolves vs Aston Villa,2-0,2,Under,Under,35.3%,64.7%,0.4359,0.1248
+28,Bournemouth vs Sunderland,1-1,2,Under,Under,44.8%,55.2%,0.5935,0.2003
+28,Burnley vs Brentford,3-4,7,Over,Over,53.5%,46.5%,0.6259,0.2164
+28,Liverpool vs West Ham,5-2,7,Over,Over,50.4%,49.6%,0.686,0.2464
+28,Newcastle vs Everton,2-3,5,Over,Under,40.7%,59.3%,0.8982,0.3513
+28,Leeds vs Man City,0-1,1,Under,Over,58.1%,41.9%,0.8694,0.3373
+28,Brighton vs Nott'm Forest,2-1,3,Over,Under,32.6%,67.5%,1.1224,0.455
+28,Fulham vs Tottenham,2-1,3,Over,Over,59.8%,40.2%,0.515,0.162
+28,Man United vs Crystal Palace,2-1,3,Over,Under,40.7%,59.3%,0.8992,0.3518
+28,Arsenal vs Chelsea,2-1,3,Over,Under,49.4%,50.6%,0.7052,0.256
+29,Bournemouth vs Brentford,0-0,0,Under,Over,61.0%,39.0%,0.9406,0.3716
+29,Everton vs Burnley,2-0,2,Under,Under,48.1%,51.9%,0.6564,0.2316
+29,Leeds vs Sunderland,0-1,1,Under,Under,42.7%,57.3%,0.5576,0.1827
+29,Wolves vs Liverpool,2-1,3,Over,Under,49.5%,50.4%,0.7022,0.2545
+29,Aston Villa vs Chelsea,1-4,5,Over,Under,42.3%,57.7%,0.8597,0.3326
+29,Brighton vs Arsenal,0-1,1,Under,Under,47.2%,52.8%,0.6385,0.2227
+29,Fulham vs West Ham,0-1,1,Under,Over,64.9%,35.1%,1.047,0.4212
+29,Man City vs Nott'm Forest,2-2,4,Over,Under,45.1%,54.9%,0.7958,0.3012
+29,Newcastle vs Man United,2-1,3,Over,Over,62.6%,37.4%,0.4689,0.1401
+29,Tottenham vs Crystal Palace,1-3,4,Over,Under,44.8%,55.2%,0.8034,0.3049
+30,Burnley vs Bournemouth,0-0,0,Under,Over,53.1%,46.9%,0.7582,0.2825
+30,Sunderland vs Brighton,0-1,1,Under,Under,33.4%,66.6%,0.4063,0.1115
+30,Arsenal vs Everton,2-0,2,Under,Under,37.5%,62.5%,0.47,0.1406
+30,Chelsea vs Newcastle,0-1,1,Under,Over,64.4%,35.6%,1.0334,0.415
+30,West Ham vs Man City,1-1,2,Under,Over,57.4%,42.6%,0.854,0.3298
+30,Crystal Palace vs Leeds,0-0,0,Under,Under,41.1%,58.9%,0.5297,0.1691
+30,Man United vs Aston Villa,3-1,4,Over,Under,42.8%,57.2%,0.8477,0.3267
+30,Nott'm Forest vs Fulham,0-0,0,Under,Under,45.2%,54.8%,0.6018,0.2045
+30,Liverpool vs Tottenham,1-1,2,Under,Over,61.9%,38.1%,0.9657,0.3835
+30,Brentford vs Wolves,2-2,4,Over,Under,43.9%,56.1%,0.8242,0.3152
+31,Wolves vs Arsenal,2-2,4,Over,Over,50.6%,49.4%,0.6814,0.2441
+31,Bournemouth vs Man United,2-2,4,Over,Under,48.0%,52.0%,0.7342,0.2705
+31,Brighton vs Liverpool,2-1,3,Over,Under,43.9%,56.1%,0.8233,0.3147
+31,Fulham vs Burnley,3-1,4,Over,Over,50.4%,49.6%,0.6852,0.246
+31,Everton vs Chelsea,3-0,3,Over,Under,40.8%,59.2%,0.8962,0.3503
+31,Leeds vs Brentford,0-0,0,Under,Over,51.8%,48.2%,0.729,0.2679
+31,Newcastle vs Sunderland,1-2,3,Over,Under,43.9%,56.1%,0.8242,0.3152
+31,Aston Villa vs West Ham,2-0,2,Under,Under,45.6%,54.4%,0.6092,0.2081
+31,Tottenham vs Nott'm Forest,0-3,3,Over,Under,40.6%,59.4%,0.9016,0.353
+32,West Ham vs Wolves,4-0,4,Over,Under,44.7%,55.3%,0.8059,0.3061
+32,Arsenal vs Bournemouth,1-2,3,Over,Under,49.8%,50.2%,0.6974,0.2521
+32,Brentford vs Everton,2-2,4,Over,Under,42.1%,57.9%,0.8644,0.3349
+32,Burnley vs Brighton,0-2,2,Under,Under,49.1%,50.9%,0.6755,0.2412
+32,Liverpool vs Fulham,2-0,2,Under,Over,57.8%,42.2%,0.8623,0.3339
+32,Crystal Palace vs Newcastle,2-1,3,Over,Over,50.2%,49.8%,0.689,0.2479
+32,Nott'm Forest vs Aston Villa,1-1,2,Under,Under,35.1%,64.9%,0.4317,0.1229
+32,Sunderland vs Tottenham,1-0,1,Under,Under,41.1%,58.9%,0.5298,0.1692
+32,Chelsea vs Man City,0-3,3,Over,Over,52.5%,47.5%,0.6434,0.2252
+32,Man United vs Leeds,1-2,3,Over,Under,49.1%,50.8%,0.7103,0.2586
+33,Brentford vs Fulham,0-0,0,Under,Over,55.3%,44.7%,0.8054,0.3059
+33,Leeds vs Wolves,3-0,3,Over,Under,41.3%,58.7%,0.8831,0.344
+33,Newcastle vs Bournemouth,1-2,3,Over,Over,58.1%,41.9%,0.5423,0.1752
+33,Tottenham vs Brighton,2-2,4,Over,Under,46.5%,53.5%,0.7657,0.2862
+33,Chelsea vs Man United,0-1,1,Under,Over,58.9%,41.1%,0.8899,0.3473
+33,Aston Villa vs Sunderland,4-3,7,Over,Under,32.8%,67.2%,1.1138,0.4512
+33,Everton vs Liverpool,1-2,3,Over,Under,44.9%,55.1%,0.8018,0.3042
+33,Nott'm Forest vs Burnley,4-1,5,Over,Under,41.6%,58.4%,0.8778,0.3414
+33,Man City vs Arsenal,2-1,3,Over,Under,44.6%,55.4%,0.8072,0.3068
+33,Crystal Palace vs West Ham,0-0,0,Under,Under,43.1%,56.9%,0.5641,0.1858
+34,Brighton vs Chelsea,3-0,3,Over,Under,46.8%,53.2%,0.7589,0.2828
+34,Bournemouth vs Leeds,2-2,4,Over,Under,44.9%,55.1%,0.8003,0.3034
+34,Burnley vs Man City,0-1,1,Under,Over,72.2%,27.8%,1.2787,0.5207
+34,Sunderland vs Nott'm Forest,0-5,5,Over,Under,37.2%,62.8%,0.9891,0.3945
+34,Fulham vs Aston Villa,1-0,1,Under,Over,50.3%,49.7%,0.7,0.2534
+34,Liverpool vs Crystal Palace,3-1,4,Over,Under,43.7%,56.3%,0.8274,0.3167
+34,West Ham vs Everton,2-1,3,Over,Under,42.9%,57.1%,0.847,0.3264
+34,Wolves vs Tottenham,0-1,1,Under,Over,50.9%,49.1%,0.7105,0.2587
+34,Arsenal vs Newcastle,1-0,1,Under,Over,61.3%,38.7%,0.9493,0.3758
+34,Man United vs Brentford,2-1,3,Over,Over,55.0%,45.0%,0.5973,0.2022
+35,Leeds vs Burnley,3-1,4,Over,Over,53.4%,46.6%,0.6268,0.2169
+35,Brentford vs West Ham,3-0,3,Over,Over,51.4%,48.6%,0.6659,0.2364
+35,Newcastle vs Brighton,3-1,4,Over,Over,52.9%,47.1%,0.6366,0.2217
+35,Wolves vs Sunderland,1-1,2,Under,Under,41.7%,58.3%,0.5391,0.1736
+35,Arsenal vs Fulham,3-0,3,Over,Under,43.8%,56.2%,0.8253,0.3157
+35,Bournemouth vs Crystal Palace,3-0,3,Over,Under,43.4%,56.6%,0.8352,0.3206
+35,Man United vs Liverpool,3-2,5,Over,Over,59.8%,40.2%,0.515,0.162
+35,Aston Villa vs Tottenham,1-2,3,Over,Over,52.3%,47.7%,0.6486,0.2277
+35,Chelsea vs Nott'm Forest,1-3,4,Over,Over,50.3%,49.7%,0.6874,0.2471
+35,Everton vs Man City,3-3,6,Over,Under,45.5%,54.5%,0.7875,0.297
+36,Liverpool vs Chelsea,1-1,2,Under,Over,65.9%,34.1%,1.0768,0.4347
+36,Brighton vs Wolves,3-0,3,Over,Over,51.1%,48.9%,0.6722,0.2395
+36,Fulham vs Bournemouth,0-1,1,Under,Under,48.5%,51.5%,0.6638,0.2353
+36,Sunderland vs Man United,0-0,0,Under,Over,57.3%,42.7%,0.8517,0.3287
+36,Man City vs Brentford,3-0,3,Over,Over,61.5%,38.5%,0.4855,0.1479
+36,Burnley vs Aston Villa,2-2,4,Over,Over,56.0%,44.0%,0.5798,0.1936
+36,Crystal Palace vs Everton,2-2,4,Over,Under,45.2%,54.8%,0.7947,0.3006
+36,Nott'm Forest vs Newcastle,1-1,2,Under,Over,60.5%,39.5%,0.9291,0.3661
+36,West Ham vs Arsenal,0-1,1,Under,Over,50.6%,49.4%,0.7062,0.2565
+36,Tottenham vs Leeds,1-1,2,Under,Over,52.6%,47.4%,0.7457,0.2763
+36,Man City vs Crystal Palace,3-0,3,Over,Over,58.3%,41.7%,0.5399,0.1741
+37,Aston Villa vs Liverpool,4-2,6,Over,Over,60.7%,39.3%,0.4991,0.1544
+37,Man United vs Nott'm Forest,3-2,5,Over,Over,54.6%,45.4%,0.6055,0.2063
+37,Brentford vs Crystal Palace,2-2,4,Over,Over,50.9%,49.1%,0.6759,0.2414
+37,Everton vs Sunderland,1-3,4,Over,Under,49.0%,51.0%,0.7136,0.2602
+37,Leeds vs Brighton,1-0,1,Under,Under,49.1%,50.9%,0.6753,0.2411
+37,Wolves vs Fulham,1-1,2,Under,Under,40.3%,59.7%,0.5155,0.1622
+37,Newcastle vs West Ham,3-1,4,Over,Over,56.7%,43.3%,0.5672,0.1874
+37,Arsenal vs Burnley,1-0,1,Under,Over,68.6%,31.4%,1.1593,0.471
+37,Bournemouth vs Man City,1-1,2,Under,Over,54.6%,45.4%,0.7897,0.2981
+37,Chelsea vs Tottenham,2-1,3,Over,Over,55.9%,44.1%,0.5816,0.1945
+38,Brighton vs Man United,0-3,3,Over,Over,55.7%,44.3%,0.5859,0.1966
+38,Burnley vs Wolves,1-1,2,Under,Under,44.9%,55.1%,0.5955,0.2013
+38,Crystal Palace vs Arsenal,1-2,3,Over,Under,41.8%,58.2%,0.8735,0.3393
+38,Fulham vs Newcastle,2-0,2,Under,Over,51.6%,48.4%,0.7255,0.2662
+38,Liverpool vs Brentford,1-1,2,Under,Over,67.1%,32.9%,1.1123,0.4505
+38,Man City vs Aston Villa,1-2,3,Over,Over,67.6%,32.4%,0.3914,0.1049
+38,Nott'm Forest vs Bournemouth,1-1,2,Under,Over,52.2%,47.8%,0.7373,0.2721
+38,Sunderland vs Chelsea,2-1,3,Over,Under,47.1%,52.9%,0.7531,0.2799
+38,Tottenham vs Everton,1-0,1,Under,Over,56.9%,43.1%,0.8423,0.3241
+38,West Ham vs Leeds,3-0,3,Over,Under,46.4%,53.6%,0.767,0.2869

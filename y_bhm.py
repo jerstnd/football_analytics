@@ -173,6 +173,13 @@ def init_new_season(state, season_team_ids, id_to_name):
     return {'home_adv': state['home_adv'], 'teams': sorted_teams}
 
 
+def fit_preseason(matches, season_team_ids, id_to_name, iterations=15000):
+    '''Fits past matches and turns the result into the new season's round-0 prior.'''
+    team_ids = sorted({m[0] for m in matches} | {m[1] for m in matches})
+    traces = run_pmcmc(matches, team_ids, iterations=iterations)
+    return init_new_season(summarise(traces, team_ids, id_to_name), season_team_ids, id_to_name)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Pre-season MCMC fit on previous season(s), saved as round 0")
     parser.add_argument("--train", nargs='+', required=True, help="Season(s) to fit on, e.g. 2526")
@@ -188,15 +195,12 @@ if __name__ == '__main__':
     if not matches:
         print(f"[Error] No played matches found for season(s) {args.train}.")
         raise SystemExit(1)
-    team_ids = sorted({m[0] for m in matches} | {m[1] for m in matches})
-
     season_ids = db.season_team_ids(conn, args.season)
     if not season_ids:
         print(f"[Error] No {args.season} fixtures in the database. Run fetch.py --season {args.season} first.")
         raise SystemExit(1)
 
-    traces = run_pmcmc(matches, team_ids)
-    state = init_new_season(summarise(traces, team_ids, id_to_name), season_ids, id_to_name)
+    state = fit_preseason(matches, season_ids, id_to_name)
 
     db.save_state(conn, args.season, 0, state)
     print(f"Saved preseason ratings: season {args.season}, round 0")

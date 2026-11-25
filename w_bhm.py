@@ -78,6 +78,29 @@ def run_mcmc(matches, prior_state, iterations=10000, step_size=0.1):
 
     return traces
 
+def update_state(prior_state, matches, iterations=10000, time_decay=0.005, var_cap=0.05):
+    '''
+    One weekly step: last week's ratings are the prior, `matches` are the new evidence.
+    Returns the new state, with `time_decay` variance added (capped at `var_cap`) so
+    ratings can follow changes in form.
+    '''
+    traces = run_mcmc(matches, prior_state, iterations=iterations)
+    burn_in = int(len(traces["home"]) * 0.2)
+
+    new_state = {"home_adv": {}, "teams": {}}
+    new_state["home_adv"]["mean"] = statistics.median(traces["home"][burn_in:])
+    new_state["home_adv"]["var"] = min(statistics.variance(traces["home"][burn_in:]) + time_decay, var_cap)
+
+    for t in traces["att"]:
+        new_state["teams"][str(t)] = {
+            "name": prior_state["teams"][str(t)]["name"],
+            "att_mean": statistics.median(traces["att"][t][burn_in:]),
+            "att_var": min(statistics.variance(traces["att"][t][burn_in:]) + time_decay, var_cap),
+            "def_mean": statistics.median(traces["def"][t][burn_in:]),
+            "def_var": min(statistics.variance(traces["def"][t][burn_in:]) + time_decay, var_cap)
+        }
+    return new_state
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="MCMC Weekly State Updater")
     parser.add_argument("--season", required=True, help="Season code, e.g. 2627")
@@ -113,24 +136,7 @@ if __name__ == '__main__':
         sys.exit(1)
 
     print(f"Running Bayesian Update on {len(weekly_matches)} matches (season {args.season} round {args.round})...")
-    traces = run_mcmc(weekly_matches, prior_state)
-
-    # Calculate New State & Apply Evolutionary Noise
-    burn_in = int(len(traces["home"]) * 0.2)
-    time_decay = 0.005 # Injects uncertainty to adapt to sudden form changes
-
-    new_state = {"home_adv": {}, "teams": {}}
-    new_state["home_adv"]["mean"] = statistics.median(traces["home"][burn_in:])
-    new_state["home_adv"]["var"] = min(statistics.variance(traces["home"][burn_in:]) + time_decay, 0.05)
-
-    for t in traces["att"]:
-        new_state["teams"][str(t)] = {
-            "name": prior_state["teams"][str(t)]["name"],
-            "att_mean": statistics.median(traces["att"][t][burn_in:]),
-            "att_var": min(statistics.variance(traces["att"][t][burn_in:]) + time_decay, 0.05),
-            "def_mean": statistics.median(traces["def"][t][burn_in:]),
-            "def_var": min(statistics.variance(traces["def"][t][burn_in:]) + time_decay, 0.05)
-        }
+    new_state = update_state(prior_state, weekly_matches)
 
     db.save_state(conn, args.season, args.round, new_state)
     print(f"Update complete! Saved ratings: season {args.season}, round {args.round}")

@@ -80,6 +80,46 @@ CREATE TABLE IF NOT EXISTS predictions (
     created_at    TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Bookmaker odds by source, e.g. 'bet365' (pre-match) and 'best' (highest price
+-- across ~17 bookmakers). matches.odds_over_25/odds_under_25 stay the odds you
+-- enter yourself for betting.
+CREATE TABLE IF NOT EXISTS odds (
+    match_id INTEGER NOT NULL REFERENCES matches(id),
+    source   TEXT    NOT NULL,
+    home     REAL,
+    draw     REAL,
+    away     REAL,
+    over_25  REAL,
+    under_25 REAL,
+    PRIMARY KEY (match_id, source)
+);
+
+-- Walk-forward backtests (backtest/backtest.py). Each run keeps its own
+-- predictions so runs with different settings can be compared.
+CREATE TABLE IF NOT EXISTS backtest_runs (
+    id            INTEGER PRIMARY KEY,
+    season        TEXT    NOT NULL,
+    train_seasons TEXT    NOT NULL,
+    rho           REAL    NOT NULL,
+    seed          INTEGER,
+    note          TEXT,
+    created_at    TEXT    NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS backtest_predictions (
+    run_id        INTEGER NOT NULL REFERENCES backtest_runs(id) ON DELETE CASCADE,
+    match_id      INTEGER NOT NULL REFERENCES matches(id),
+    slot          INTEGER NOT NULL,   -- update step the match was predicted in (by date, see backtest.py)
+    xg_h          REAL NOT NULL,
+    xg_a          REAL NOT NULL,
+    prob_h        REAL NOT NULL,
+    prob_d        REAL NOT NULL,
+    prob_a        REAL NOT NULL,
+    prob_over_25  REAL NOT NULL,
+    prob_under_25 REAL NOT NULL,
+    PRIMARY KEY (run_id, match_id)
+);
+
 -- Kelly-sized orders produced by kelly_sizing.py.
 CREATE TABLE IF NOT EXISTS orders (
     match_id   INTEGER PRIMARY KEY REFERENCES matches(id),

@@ -4,6 +4,7 @@ Load match data into football.db.
   python fetch.py --season 2627                       # fixtures + results from fixturedownload.com
   python fetch.py --season 2627 --odds my_odds.csv    # O/U 2.5 odds: HomeTeam,AwayTeam,Odds_Over_25,Odds_Under_25
   python fetch.py --season 2526 --history season-2526.csv   # a football-data.co.uk season CSV (no rounds)
+  python fetch.py --season 2526 --market-odds Matches.csv    # Bet365 + best-price odds (Club-Football-Match-Data)
 
 Every mode is an upsert keyed on (season, home team, away team), so re-running is safe.
 '''
@@ -104,6 +105,46 @@ def import_odds(conn, season, path):
     print(f"Updated odds for {n} matches.")
 
 
+def import_market_odds(conn, season, path):
+    '''
+    Bet365 and best-price odds from the Club-Football-Match-Data Matches.csv
+    (github.com/xgabora/Club-Football-Match-Data-2000-2025), which republishes
+    football-data.co.uk. Only Premier League (E0) rows of the given season are read,
+    and a row is stored only if its score matches the result already in the database.
+    '''
+    first_year = 2000 + int(season[:2])
+    start, end = f'{first_year}-07-01', f'{first_year + 1}-06-30'
+    num = lambda v: float(v) if v not in ('', None) else None
+    counts = {'stored': 0, 'no_match': 0, 'score_differs': 0}
+    with conn, open(path, newline='', encoding='utf-8') as f:
+        for row in csv.DictReader(f):
+            if row['Division'] != 'E0' or not (start <= row['MatchDate'] <= end):
+                continue
+            h, a = db.resolve_team(conn, row['HomeTeam']), db.resolve_team(conn, row['AwayTeam'])
+            m = conn.execute('SELECT id, home_goals, away_goals FROM matches WHERE season = ? AND home_id = ? AND away_id = ?',
+                             (season, h, a)).fetchone() if h is not None and a is not None else None
+            if m is None:
+                counts['no_match'] += 1
+                print(f"  [!] No {season} match for {row['HomeTeam']} vs {row['AwayTeam']} ({row['MatchDate']})")
+                continue
+            if m['home_goals'] is not None and (m['home_goals'], m['away_goals']) != (int(float(row['FTHome'])), int(float(row['FTAway']))):
+                counts['score_differs'] += 1
+                print(f"  [!] Score differs, skipped: {row['HomeTeam']} vs {row['AwayTeam']} "
+                      f"(file {row['FTHome']}-{row['FTAway']}, db {m['home_goals']}-{m['away_goals']})")
+                continue
+            conn.executemany('INSERT OR REPLACE INTO odds (match_id, source, home, draw, away, over_25, under_25) '
+                             'VALUES (?, ?, ?, ?, ?, ?, ?)', [
+                (m['id'], 'bet365', num(row['OddHome']), num(row['OddDraw']), num(row['OddAway']),
+                 num(row['Over25']), num(row['Under25'])),
+                (m['id'], 'best', num(row['MaxHome']), num(row['MaxDraw']), num(row['MaxAway']),
+                 num(row['MaxOver25']), num(row['MaxUnder25'])),
+            ])
+            counts['stored'] += 1
+    total = conn.execute('SELECT COUNT(*) FROM matches WHERE season = ?', (season,)).fetchone()[0]
+    print(f"{season}: odds stored for {counts['stored']} of {total} matches "
+          f"({counts['no_match']} unmatched rows, {counts['score_differs']} score mismatches)")
+
+
 def import_history(conn, season, path):
     '''football-data.co.uk format: Date (YYYY-MM-DD or DD/MM/YYYY), HomeTeam, AwayTeam, FTHG, FTAG.'''
     counts = {'new': 0, 'result': 0, 'changed': 0, 'same': 0}
@@ -128,11 +169,14 @@ if __name__ == '__main__':
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--odds', help="CSV of O/U 2.5 odds to attach to this season's matches")
     group.add_argument('--history', help="football-data.co.uk season CSV to import")
+    group.add_argument('--market-odds', help="Club-Football-Match-Data Matches.csv: Bet365 and best-price odds")
     args = parser.parse_args()
 
     conn = db.connect()
     if args.odds:
         import_odds(conn, args.season, args.odds)
+    elif args.market_odds:
+        import_market_odds(conn, args.season, args.market_odds)
     elif args.history:
         import_history(conn, args.season, args.history)
     else:

@@ -10,16 +10,15 @@ Everything (teams, results, fixtures, odds, ratings, predictions and orders) is 
 
 ## Performance
 
-Every prediction is made only from results played before that match, so no future data leaks in. The model is judged mainly on log loss, which is lower for better probabilities; always predicting a third each way scores 1.099 for home/draw/away.
+Every prediction is made only from results played before that match, so no future data leaks in. The model is judged on log loss, where lower means better probabilities. The real benchmark is Bet365's odds with the bookmaker's margin removed, because beating the market is what a betting edge requires. Guessing a third each way scores 1.099 for home/draw/away, and a coin flip scores 0.693 for over/under.
 
-| Test | Home/draw/away | Over/under 2.5 |
+| Test | Home/draw/away: model vs Bet365 | Over/under 2.5: model vs Bet365 |
 |---|---|---|
-| 2025/26 backtest: 38 weeks, 380 matches | 1.0252 log loss, 0.2089 RPS | 0.7205 log loss, 53.61% correct |
-| 2026/27 live: rounds 1–11, 110 matches | 1.026 log loss, 48% favourite correct | 51% correct |
+| 2024/25 backtest, 380 matches | 0.983 vs 0.971 | 0.692 vs 0.677 |
+| 2025/26 backtest, 380 matches | 1.035 vs 1.019 | 0.710 vs 0.689 |
+| 2026/27 live, rounds 1–11, 110 matches | 1.026 (no odds for rounds 3–11 yet) | 0.696 |
 
-RPS is the ranked probability score (also lower is better). "Correct" means the more likely outcome was the one that happened.
-
-The 2025/26 backtest was run before the fix for promoted-team ratings.
+The model has real skill against guessing, but in both backtest seasons Bet365's odds were more accurate in both markets. Simulated betting on every positive edge made a small flat-stake profit on home/draw/away, but it lost on over/under in 2025/26. Quarter-Kelly staking lost money in every case. The flat-stake profit is within what luck alone produces over about 350 bets, so it isn't evidence of an edge. Re-run `python backtest/backtest.py --report <run id>` for the full tables.
 
 ## Setup
 
@@ -87,6 +86,27 @@ To import an older season (football-data.co.uk CSV format: `Date, HomeTeam, Away
 python fetch.py --season 2526 --history data/season-2526.csv
 ```
 
+To add market odds for a season (Bet365 pre-match, plus the best price across about 17 bookmakers), use `Matches.csv` from [Club-Football-Match-Data](https://github.com/xgabora/Club-Football-Match-Data-2000-2025). It republishes football-data.co.uk's odds. A row is only stored if its score matches the result already in the database.
+
+```
+python fetch.py --season 2526 --market-odds Matches.csv
+```
+
+## Backtesting
+
+```
+python backtest/backtest.py --season 2425 2526      # replay seasons (about 3 minutes each)
+python backtest/backtest.py --list                  # saved runs
+python backtest/backtest.py --report 2 --min-edge 0.05 --kelly 0.1
+python backtest/backtest.py --report 2 --export     # CSVs for viz_1x2.py and viz_ou.py
+```
+
+A backtest runs the live pipeline on a past season. It fits the preseason ratings on the season before, then steps through the season, predicting each match with the ratings of the time before adding its result. Steps follow match dates, so a postponed match is predicted and learned from when it was actually played. Each run saves its predictions, so runs with different settings (`--rho`, `--seed`, `--train`) can be compared later.
+
+The report scores the model against Bet365's odds and simulates betting on the outcome with the highest edge in each market, at Bet365's price and at the best price across bookmakers. It gives flat-stake profit and a fractional Kelly bankroll.
+
+Charts: `python backtest/viz_1x2.py --csv backtest/backtest_run2_1x2.csv` and `python backtest/viz_ou.py --csv backtest/backtest_run2_ou2_5.csv`. Both need `pip install matplotlib`, and `viz_ou.py` opens a window after saving its PNG.
+
 ## Project layout
 
 | File | Purpose |
@@ -97,8 +117,8 @@ python fetch.py --season 2526 --history data/season-2526.csv
 | `poisson.py` | Dixon-Coles scoreline grid giving home/draw/away and over/under 2.5 probabilities. Saves predictions. |
 | `kelly_sizing.py` | Fractional Kelly stakes for over/under 2.5 bets with positive expected value. Saves orders. |
 | `db.py` | Database schema and the shared read/write functions. |
-| `backtest/` | Backtests against 2025/26 (see [Known limitations](#known-limitations)). |
-| `data/` | Raw historical season CSVs, plus legacy files the backtests still use. |
+| `backtest/` | `backtest.py` (walk-forward backtest against market odds) and the chart scripts. |
+| `data/` | The raw 2023–26 season CSVs the database was first built from. |
 
 ## The model
 
@@ -120,10 +140,12 @@ away goals ~ Poisson(exp(intercept + att[a] + def[h]))
 | Table | Contents |
 |---|---|
 | `teams`, `team_aliases` | Team IDs and alternative spellings |
-| `matches` | One row per fixture. Goals are empty until the match is played, and odds are empty until imported. |
+| `matches` | One row per fixture. Goals are empty until the match is played. The over/under odds columns hold the odds you enter for betting. |
 | `rating_runs`, `ratings` | Ratings for each season and round. Round 0 is the preseason fit; round *N* includes round *N*'s results. |
+| `odds` | Market odds per match and source: `bet365` and `best` (highest price across bookmakers), for home/draw/away and over/under 2.5. Every match 2023–26 and 2026/27 rounds 1–2. |
 | `predictions` | The latest prediction for each match, with the rating round it came from |
 | `orders` | Kelly stakes from `kelly_sizing.py` |
+| `backtest_runs`, `backtest_predictions` | Each backtest's settings and its prediction for every match |
 
 You can browse the data with any SQLite client, or from the command line:
 
@@ -133,8 +155,7 @@ sqlite3 football.db "SELECT * FROM ratings WHERE season='2627' AND round=11 ORDE
 
 ## Known limitations
 
-- **The backtests haven't been moved to the database.** The scripts in `backtest/` still read the old CSV and JSON files and call `w_bhm.py` with an outdated command line, so they won't run as they are.
-- **2023–26 has no round numbers.** Those seasons are stored with match dates only, because the source CSVs don't include gameweeks.
-- **Postponed matches.** A postponed match stays in its original round. `w_bhm.py` warns about it, but its result is skipped once that round has been processed.
+- **Postponed matches in the weekly workflow.** A postponed match stays in its original round. `w_bhm.py` warns about it, but its result is skipped once that round has been processed. The backtest handles this by date.
+- **Pre-match odds, not closing odds.** The `odds` table holds Bet365's pre-match prices. Closing odds are the sharper benchmark, and they aren't stored.
 - **No reset between seasons.** Ratings carried over from last season are not shrunk toward 0 and their variances are not widened before round 1, so early-season ratings may be over-confident.
 - **The intercept is fixed** and doesn't learn from data, so a league-wide change in scoring rate isn't picked up.
